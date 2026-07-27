@@ -1,25 +1,39 @@
 import { Component, inject } from '@angular/core';
 import { ProductsService } from '../../../core/services/products.service';
-import { GalleryItem } from '../../../core/models/product.model';
-import { LightboxComponent } from '../../../shared/lightbox/lightbox.component';
+import { SceneService } from '../../../core/services/scene.service';
+import { SfxService } from '../../../core/services/sfx.service';
+import { HotspotComponent } from '../../../shared/hotspot/hotspot.component';
+import { ItemInspectComponent, InspectableItem } from '../../../shared/item-inspect/item-inspect.component';
 
 @Component({
   selector: 'app-gallery',
   standalone: true,
-  imports: [LightboxComponent],
+  imports: [HotspotComponent, ItemInspectComponent],
   templateUrl: './gallery.component.html',
   styleUrl: './gallery.component.scss'
 })
 export class GalleryComponent {
   private readonly products = inject(ProductsService);
-  readonly items = this.products.getGalleryItems();
-  selected: GalleryItem | null = null;
+  private readonly sfx = inject(SfxService);
+  readonly scene = inject(SceneService);
 
-  open(item: GalleryItem): void {
-    this.selected = item;
+  readonly items = this.products.getGalleryItems();
+  selected: InspectableItem | null = null;
+
+  go(id: string): void {
+    this.scene.navigateTo(id);
   }
 
-  close(): void {
+  onHover(): void {
+    this.sfx.play('tick');
+  }
+
+  inspect(item: (typeof this.items)[number]): void {
+    this.sfx.play('tick');
+    this.selected = { image: item.image, title: item.caption };
+  }
+
+  closeInspect(): void {
     this.selected = null;
   }
 }

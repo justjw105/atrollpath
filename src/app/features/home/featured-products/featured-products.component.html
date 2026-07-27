@@ -1,32 +1,33 @@
-<section id="featured" class="featured">
-  <div class="container">
-    <p class="eyebrow">Chapter One</p>
-    <h2 class="featured__title">Treasures of the Cave</h2>
-    <p class="featured__intro">
-      Every piece is hand-cast and kiln-fused, then laser-etched with fine
-      linework for striking contrast against the glass. Here are a few of
-      the quests our customers return for again and again.
-    </p>
+<section class="scene scene--treasure">
+  <img class="scene__bg" src="assets/img/scene-treasure-room.png" alt="A troll treasure room lined with glowing shelves" >
+  <div class="scene__scrim"></div>
 
-    <div class="featured__grid">
-      @for (item of items; track item.id) {
-        <article class="quest-card">
-          @if (item.badge) {
-            <span class="quest-card__badge">{{ item.badge }}</span>
-          }
-          <div class="quest-card__image-wrap">
-            <img [src]="item.image" [alt]="item.name" class="quest-card__image">
-          </div>
-          <div class="quest-card__body">
-            <p class="quest-card__tagline">{{ item.tagline }}</p>
-            <h3 class="quest-card__name">{{ item.name }}</h3>
-            <p class="quest-card__desc">{{ item.description }}</p>
-            <a class="quest-card__cta" [href]="item.etsyUrl" target="_blank" rel="noopener">
-              View in the Troll Cave →
-            </a>
-          </div>
-        </article>
-      }
-    </div>
+  <div class="scene__intro">
+    <p class="eyebrow">Chapter One</p>
+    <h2 class="scene__title">Treasure Room</h2>
+    <p class="scene__subtitle">Click an artifact on the shelves to inspect it.</p>
   </div>
+
+  <div class="artifact-row">
+    @for (item of items; track item.id; let i = $index) {
+      <button
+        type="button"
+        class="artifact"
+        (mouseenter)="onHover()"
+        (click)="inspect(item)"
+      >
+        <img [src]="item.image" [alt]="item.name" class="artifact__img">
+        <img class="artifact__frame" src="assets/img/frame.png" alt="" aria-hidden="true">
+        @if (item.badge) {
+          <span class="artifact__badge">{{ item.badge }}</span>
+        }
+        <span class="artifact__name">{{ item.name }}</span>
+      </button>
+    }
+  </div>
+
+  <app-hotspot [x]="8" [y]="88" icon="door" label="Back to the Cave" (activate)="go('hero')" />
+  <app-hotspot [x]="92" [y]="88" icon="sign" label="Continue to Workbench" (activate)="go('gallery')" />
+
+  <app-item-inspect [item]="selected" (closed)="closeInspect()" />
 </section>
