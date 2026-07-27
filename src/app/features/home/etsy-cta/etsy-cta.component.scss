@@ -30,6 +30,14 @@
   padding: 32px;
 }
 
+.scene__logo {
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
+  margin: 0 auto 18px;
+  filter: drop-shadow(0 0 24px rgba(240, 185, 74, 0.5));
+}
+
 .scene__title {
   font-family: var(--font-display);
   font-size: clamp(2rem, 4.8vw, 3.2rem);
