@@ -1,0 +1,9 @@
+@if (item) {
+  <div class="lightbox" role="dialog" aria-modal="true" (click)="close()">
+    <button type="button" class="lightbox__close" (click)="close()" aria-label="Close">✕</button>
+    <figure class="lightbox__figure" (click)="$event.stopPropagation()">
+      <img [src]="item.image" [alt]="item.caption">
+      <figcaption>{{ item.caption }}</figcaption>
+    </figure>
+  </div>
+}
