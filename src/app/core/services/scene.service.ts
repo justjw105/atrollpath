@@ -4,7 +4,7 @@ import { SfxService } from './sfx.service';
 export interface SceneNode {
   id: string;
   label: string;
-  /** position on the world-map overlay, 0-100 (%) on both axes */
+  /** position on the world-map overlay AND the hero map art, 0-100 (%) on both axes */
   x: number;
   y: number;
 }
@@ -16,12 +16,16 @@ export interface SceneNode {
  *     to the switch in home.component.html.
  *  3. Wiring a hotspot to it from whichever scene should lead there.
  * The map overlay and HUD pick new scenes up automatically.
+ *
+ * x/y here are calibrated to match the actual landmarks painted into
+ * hero-map.png (the tree cave-door, the workshop tower, and the rocky
+ * cave entrance) so the overlay markers land on the right spots.
  */
 export const SCENES: SceneNode[] = [
-  { id: 'hero', label: 'Cave Entrance', x: 12, y: 78 },
-  { id: 'featured', label: 'Treasure Room', x: 38, y: 32 },
-  { id: 'gallery', label: 'Workbench', x: 66, y: 62 },
-  { id: 'visit', label: 'Troll Cave Exit', x: 90, y: 22 }
+  { id: 'hero', label: 'The Path', x: 50, y: 88 },
+  { id: 'featured', label: 'Treasure Room', x: 20, y: 58 },
+  { id: 'gallery', label: 'Workbench Tower', x: 57, y: 32 },
+  { id: 'visit', label: 'Troll Cave Exit', x: 87, y: 60 }
 ];
 
 export type TransitionPhase = 'idle' | 'closing' | 'open-black' | 'opening';

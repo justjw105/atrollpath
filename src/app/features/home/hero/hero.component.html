@@ -1,14 +1,14 @@
 <section class="scene scene--hero">
-  <img class="scene__bg" src="assets/img/hero-cave.png" alt="A cozy troll cave entrance in an enchanted mossy forest" >
+  <img class="scene__bg" src="assets/img/hero-map.png" alt="A fantasy map showing the troll's cave, a workshop tower, and a rocky cave entrance connected by a winding path" >
   <div class="scene__scrim"></div>
 
   <div class="scene__intro">
     <p class="eyebrow">A quest begins at the Troll Cave</p>
     <h1 class="scene__title">Whimsical fused glass,<br>forged by firelight.</h1>
-    <p class="scene__subtitle">Click a glowing waypoint below to explore, or open the map in the corner.</p>
+    <p class="scene__subtitle">Click a landmark on the map to explore, or open the full map in the corner.</p>
   </div>
 
-  <app-hotspot [x]="30" [y]="70" icon="door" label="Enter the Treasure Room" (activate)="go('featured')" />
-  <app-hotspot [x]="62" [y]="58" icon="sign" label="Visit the Workbench" (activate)="go('gallery')" />
-  <app-hotspot [x]="85" [y]="80" icon="chest" label="Troll Cave on Etsy" (activate)="go('visit')" />
+  <app-hotspot [x]="20" [y]="58" icon="door" label="Enter the Treasure Room" (activate)="go('featured')" />
+  <app-hotspot [x]="57" [y]="32" icon="sign" label="Visit the Workbench Tower" (activate)="go('gallery')" />
+  <app-hotspot [x]="87" [y]="60" icon="exit" label="Step into the Troll Cave (Etsy)" (activate)="go('visit')" />
 </section>
