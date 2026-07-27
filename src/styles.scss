@@ -1,0 +1,137 @@
+/* ==========================================================================
+   ATrollPath — Global Theme
+   Cozy troll-cave / woodland fantasy design tokens.
+   Edit these variables to re-theme the entire site from one place.
+   ========================================================================== */
+
+:root {
+  /* Palette */
+  --color-moss-950: #10190f;
+  --color-moss-900: #16241a;
+  --color-moss-800: #1e3324;
+  --color-moss-700: #2f4a3a;
+  --color-moss-500: #4c7a5e;
+  --color-moss-300: #8fb79d;
+
+  --color-teal-700: #1a4a47;
+  --color-amber-400: #f0b94a;
+  --color-amber-500: #e8a33d;
+  --color-amber-600: #c9791f;
+
+  --color-parchment-100: #fbf3dd;
+  --color-parchment-200: #f3e6c8;
+  --color-parchment-300: #e9d7ab;
+
+  --color-ink-900: #201509;
+  --color-ink-700: #3a2a17;
+
+  /* Semantic */
+  --bg-canvas: var(--color-moss-950);
+  --bg-panel: var(--color-moss-900);
+  --bg-panel-raised: var(--color-moss-800);
+  --text-primary: var(--color-parchment-100);
+  --text-muted: var(--color-moss-300);
+  --accent: var(--color-amber-500);
+  --accent-strong: var(--color-amber-400);
+  --border-glow: rgba(240, 185, 74, 0.35);
+
+  /* Type */
+  --font-display: "Cinzel Decorative", "Cinzel", serif;
+  --font-heading: "Cinzel", serif;
+  --font-body: "EB Garamond", Georgia, serif;
+
+  /* Layout */
+  --content-max: 1180px;
+  --radius-lg: 22px;
+  --radius-md: 14px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--bg-canvas);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 18px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-heading);
+  letter-spacing: 0.02em;
+  margin: 0 0 0.5em;
+  color: var(--text-primary);
+}
+
+a {
+  color: var(--accent-strong);
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button {
+  font-family: inherit;
+}
+
+.container {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.eyebrow {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  letter-spacing: 0.28em;
+  font-size: 0.75rem;
+  color: var(--accent-strong);
+}
+
+.btn-quest {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 30px;
+  border-radius: 999px;
+  border: 2px solid var(--color-amber-600);
+  background: linear-gradient(180deg, var(--color-amber-400), var(--color-amber-600));
+  color: var(--color-ink-900);
+  font-family: var(--font-heading);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 6px 0 var(--color-ink-700), 0 10px 24px rgba(0,0,0,0.4);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn-quest:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 0 var(--color-ink-700), 0 14px 28px rgba(0,0,0,0.45);
+}
+
+.btn-quest:active {
+  transform: translateY(2px);
+  box-shadow: 0 3px 0 var(--color-ink-700), 0 6px 14px rgba(0,0,0,0.4);
+}
+
+::selection {
+  background: var(--color-amber-500);
+  color: var(--color-ink-900);
+}
+
+/* scroll-margin so anchored sections clear the sticky header/nav */
+section[id] {
+  scroll-margin-top: 120px;
+}
