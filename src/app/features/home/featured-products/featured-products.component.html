@@ -24,6 +24,13 @@
         <span class="artifact__name">{{ item.name }}</span>
       </button>
     }
+
+    <div class="artifact artifact--coming-soon">
+      <div class="artifact__placeholder">
+        <span class="artifact__plus">+</span>
+      </div>
+      <span class="artifact__name">More Treasures Coming Soon</span>
+    </div>
   </div>
 
   <app-hotspot [x]="8" [y]="88" icon="door" label="Back to the Crossroads" (activate)="go('hero')" />
