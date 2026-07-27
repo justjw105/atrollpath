@@ -5,6 +5,11 @@ import { SfxService } from '../../../core/services/sfx.service';
 import { HotspotComponent } from '../../../shared/hotspot/hotspot.component';
 import { ItemInspectComponent, InspectableItem } from '../../../shared/item-inspect/item-inspect.component';
 
+/**
+ * The Workbench Tower scene — showcases custom commission pieces. Add more
+ * completed commissions to core/data/products.data.ts (COMMISSIONS array)
+ * and they'll appear here automatically as clickable artifacts.
+ */
 @Component({
   selector: 'app-gallery',
   standalone: true,
@@ -17,7 +22,7 @@ export class GalleryComponent {
   private readonly sfx = inject(SfxService);
   readonly scene = inject(SceneService);
 
-  readonly items = this.products.getGalleryItems();
+  readonly commissions = this.products.getCommissions();
   selected: InspectableItem | null = null;
 
   go(id: string): void {
@@ -28,9 +33,16 @@ export class GalleryComponent {
     this.sfx.play('tick');
   }
 
-  inspect(item: (typeof this.items)[number]): void {
+  inspect(item: (typeof this.commissions)[number]): void {
     this.sfx.play('tick');
-    this.selected = { image: item.image, title: item.caption };
+    this.selected = {
+      image: item.image,
+      title: item.name,
+      description: item.description,
+      badge: item.badge,
+      ctaUrl: item.ctaUrl,
+      ctaLabel: item.ctaLabel
+    };
   }
 
   closeInspect(): void {

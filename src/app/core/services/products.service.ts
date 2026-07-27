@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { FEATURED_PRODUCTS, GALLERY_ITEMS } from '../data/products.data';
-import { GalleryItem, Product } from '../models/product.model';
+import { COMMISSIONS, FEATURED_PRODUCTS, GALLERY_ITEMS } from '../data/products.data';
+import { CommissionPiece, GalleryItem, Product } from '../models/product.model';
 
 /**
  * Thin data-access layer. Today it just returns the static arrays in
@@ -16,5 +16,9 @@ export class ProductsService {
 
   getGalleryItems(): GalleryItem[] {
     return GALLERY_ITEMS;
+  }
+
+  getCommissions(): CommissionPiece[] {
+    return COMMISSIONS;
   }
 }

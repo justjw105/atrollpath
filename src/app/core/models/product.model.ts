@@ -19,3 +19,20 @@ export interface GalleryItem {
   image: string;
   caption: string;
 }
+
+/**
+ * A one-of-a-kind custom commission piece shown in the Commissions scene.
+ * Unlike Product, there's no fixed Etsy listing per piece (each commission
+ * is bespoke) — ctaUrl/ctaLabel let each piece link somewhere sensible
+ * (e.g. the shop's message-to-inquire page) once that's available.
+ */
+export interface CommissionPiece {
+  id: string;
+  name: string;
+  tagline: string;
+  description: string;
+  image: string;
+  badge?: string;
+  ctaLabel?: string;
+  ctaUrl?: string;
+}

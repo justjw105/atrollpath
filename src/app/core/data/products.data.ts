@@ -1,4 +1,4 @@
-import { Product, GalleryItem } from '../models/product.model';
+import { Product, GalleryItem, CommissionPiece } from '../models/product.model';
 
 /**
  * GROWTH POINT: this is the single source of truth for featured products.
@@ -42,9 +42,9 @@ export const FEATURED_PRODUCTS: Product[] = [
 ];
 
 /**
- * GROWTH POINT: gallery images pulled from real studio photos. Add more
- * entries here (or wire this up to a CMS/API later) to grow the gallery
- * without touching the component code.
+ * GROWTH POINT: past studio photos, kept for possible future use (e.g. a
+ * "process" or "about" page) but no longer shown by the Workbench/Commissions
+ * scene, which now spotlights custom commission pieces instead.
  */
 export const GALLERY_ITEMS: GalleryItem[] = [
   { id: 'g1', image: 'assets/products/product-1.jpg', caption: 'Fresh from the kiln' },
@@ -64,6 +64,27 @@ export const GALLERY_ITEMS: GalleryItem[] = [
   { id: 'g15', image: 'assets/products/product-18.jpg', caption: 'Detail shot' },
   { id: 'g16', image: 'assets/products/product-19.jpg', caption: 'Finishing touches' },
   { id: 'g17', image: 'assets/products/product-20.jpg', caption: 'From the workbench' }
+];
+
+/**
+ * GROWTH POINT: this is the single source of truth for custom commission
+ * pieces shown in the Commissions scene (the tower on the hero map). Add a
+ * new past commission here as you complete more — each becomes a clickable
+ * artifact in the tower with its own inspect panel. Swap ctaUrl/ctaLabel for
+ * a dedicated "request a commission" link once you have one.
+ */
+export const COMMISSIONS: CommissionPiece[] = [
+  {
+    id: 'memorial-lantern',
+    name: 'Memorial Lantern',
+    tagline: 'A keepsake to hold their light',
+    description:
+      'A custom memorial lantern commissioned in loving memory of a customer’s family member. A dark-framed, domed lantern with scalloped detailing and ornate filigree corners houses richly tinted glass panels, hand-etched in fine white linework and personalized with meaningful memorial artwork. Every memorial piece is designed one-on-one with the family to reflect the person being honored.',
+    image: 'assets/commissions/memorial-lantern.jpg',
+    badge: 'Custom Commission',
+    ctaLabel: 'Inquire About a Commission',
+    ctaUrl: 'https://www.etsy.com/shop/ATrollPath'
+  }
 ];
 
 export const ETSY_SHOP_URL = 'https://www.etsy.com/shop/ATrollPath';
