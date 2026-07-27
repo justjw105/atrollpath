@@ -24,7 +24,7 @@ export interface SceneNode {
 export const SCENES: SceneNode[] = [
   { id: 'hero', label: 'The Path', x: 50, y: 88 },
   { id: 'featured', label: 'Treasure Room', x: 20, y: 58 },
-  { id: 'gallery', label: 'Commissions', x: 57, y: 32 },
+  { id: 'gallery', label: "The Maker's Tower", x: 57, y: 32 },
   { id: 'visit', label: 'Troll Cave Exit', x: 87, y: 60 }
 ];
 
