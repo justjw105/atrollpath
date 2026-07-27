@@ -1,25 +1,25 @@
-import { AfterViewInit, Component, OnDestroy, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { WorldMapNavComponent } from './shared/world-map-nav/world-map-nav.component';
-import { SiteFooterComponent } from './shared/site-footer/site-footer.component';
-import { ScrollSpyService } from './core/services/scroll-spy.service';
+import { GameHudComponent } from './shared/game-hud/game-hud.component';
+import { QuestMapOverlayComponent } from './shared/quest-map-overlay/quest-map-overlay.component';
+import { SceneTransitionComponent } from './shared/scene-transition/scene-transition.component';
+import { IntroSplashComponent } from './shared/intro-splash/intro-splash.component';
+import { SfxService } from './core/services/sfx.service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, WorldMapNavComponent, SiteFooterComponent],
+  imports: [RouterOutlet, GameHudComponent, QuestMapOverlayComponent, SceneTransitionComponent, IntroSplashComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
-export class AppComponent implements AfterViewInit, OnDestroy {
-  private readonly spy = inject(ScrollSpyService);
+export class AppComponent {
+  private readonly sfx = inject(SfxService);
 
-  ngAfterViewInit(): void {
-    // Wait a tick so section elements from the routed page exist in the DOM.
-    setTimeout(() => this.spy.observe(), 0);
-  }
+  readonly started = signal(false);
 
-  ngOnDestroy(): void {
-    this.spy.disconnect();
+  beginQuest(): void {
+    this.sfx.unlock();
+    this.started.set(true);
   }
 }

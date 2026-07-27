@@ -50,18 +50,19 @@
   box-sizing: border-box;
 }
 
-html {
-  scroll-behavior: smooth;
+html, body {
+  height: 100%;
+  margin: 0;
 }
 
 body {
-  margin: 0;
   background: var(--bg-canvas);
   color: var(--text-primary);
   font-family: var(--font-body);
   font-size: 18px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
 h1, h2, h3, h4 {
@@ -129,9 +130,4 @@ button {
 ::selection {
   background: var(--color-amber-500);
   color: var(--color-ink-900);
-}
-
-/* scroll-margin so anchored sections clear the sticky header/nav */
-section[id] {
-  scroll-margin-top: 120px;
 }
