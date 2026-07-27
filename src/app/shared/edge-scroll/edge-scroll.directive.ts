@@ -1,4 +1,4 @@
-import { Directive, ElementRef, HostListener, OnDestroy, inject } from '@angular/core';
+import { Directive, ElementRef, HostListener, OnDestroy, OnInit, inject } from '@angular/core';
 
 /**
  * Attach to a horizontally-scrollable full-bleed container (overflow-x: auto)
@@ -6,12 +6,20 @@ import { Directive, ElementRef, HostListener, OnDestroy, inject } from '@angular
  * classic "point and click adventure / RTS" edge-scroll camera behavior.
  * Native touch swipe still works untouched since this only reacts to mouse
  * movement; it's a desktop-hover convenience on top of normal scrolling.
+ *
+ * Also enforces "safe" centering in JS as a belt-and-suspenders fallback:
+ * the host's CSS should already declare `justify-content: safe center`, but
+ * on browsers that don't yet support the `safe` keyword, plain `center`
+ * mathematically centers overflowing content off both edges — which leaves
+ * the leading edge permanently unreachable since scrollLeft can't go
+ * negative. This directive flips to flex-start whenever the content
+ * actually overflows, so every part of the image stays scrollable.
  */
 @Directive({
   selector: '[appEdgeScroll]',
   standalone: true
 })
-export class EdgeScrollDirective implements OnDestroy {
+export class EdgeScrollDirective implements OnInit, OnDestroy {
   private readonly el: ElementRef<HTMLElement> = inject(ElementRef);
 
   private static readonly EDGE_ZONE_PX = 140;
@@ -20,6 +28,29 @@ export class EdgeScrollDirective implements OnDestroy {
   private rafId: number | null = null;
   private direction = 0;
   private speed = 0;
+  private resizeObserver?: ResizeObserver;
+
+  ngOnInit(): void {
+    this.syncAlignment();
+
+    // The map-canvas child only reaches its real (image-driven) width once
+    // the background image finishes loading, so watch it directly rather
+    // than just the host — a resize of the host alone wouldn't catch that.
+    const content = this.el.nativeElement.firstElementChild as HTMLElement | null;
+
+    if (typeof ResizeObserver !== 'undefined') {
+      this.resizeObserver = new ResizeObserver(() => this.syncAlignment());
+      this.resizeObserver.observe(this.el.nativeElement);
+      if (content) {
+        this.resizeObserver.observe(content);
+      }
+    }
+  }
+
+  @HostListener('window:resize')
+  onWindowResize(): void {
+    this.syncAlignment();
+  }
 
   @HostListener('mousemove', ['$event'])
   onMouseMove(event: MouseEvent): void {
@@ -55,6 +86,13 @@ export class EdgeScrollDirective implements OnDestroy {
     this.stop();
   }
 
+  /** Force start-alignment whenever content overflows so nothing is left unreachable. */
+  private syncAlignment(): void {
+    const node = this.el.nativeElement;
+    const overflowing = node.scrollWidth > node.clientWidth + 1;
+    node.style.justifyContent = overflowing ? 'flex-start' : 'center';
+  }
+
   private start(): void {
     if (this.rafId !== null) return;
     const step = (): void => {
@@ -73,5 +111,6 @@ export class EdgeScrollDirective implements OnDestroy {
 
   ngOnDestroy(): void {
     this.stop();
+    this.resizeObserver?.disconnect();
   }
 }

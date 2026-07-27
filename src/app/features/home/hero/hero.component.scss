@@ -8,7 +8,13 @@
   -ms-overflow-style: none;
   display: flex;
   align-items: stretch;
+  /* Center the map when it fits, but if it overflows, "safe" alignment
+     falls back to start-aligned so every part of the image stays reachable
+     by scrolling. Plain `center` (without `safe`) mathematically centers
+     overflow off both edges, which leaves the left portion permanently
+     unreachable since scrollLeft can't go negative — that was the bug. */
   justify-content: center;
+  justify-content: safe center;
 
   &::-webkit-scrollbar {
     display: none;
