@@ -12,9 +12,9 @@ export const FEATURED_PRODUCTS: Product[] = [
     name: 'Dragon Egg Paint Kit',
     tagline: 'Hatch your own treasure',
     description:
-      'A hand-cast fused glass dragon egg paired with everything you need to paint your own scales and markings — our best-selling quest for aspiring dragon keepers.',
+      'A set of white, 3D-printed dragon eggs paired with everything you need to paint your own scales and markings — our best-selling quest for aspiring dragon keepers.',
     priceLabel: 'From the Troll Cave',
-    image: 'assets/products/product-3.jpg',
+    image: 'assets/products/product-12.jpg',
     etsyUrl: 'https://www.etsy.com/shop/ATrollPath',
     badge: 'Top Seller'
   },
@@ -30,37 +30,37 @@ export const FEATURED_PRODUCTS: Product[] = [
     badge: 'Fan Favorite'
   },
   {
-    id: 'woodland-fused-piece',
-    name: 'Woodland Fused Glass Art',
-    tagline: 'One-of-a-kind forest treasure',
+    id: 'blue-wave-lantern',
+    name: 'Blue Wave Stained Glass Lantern',
+    tagline: 'A serene glow for any room',
     description:
-      'A unique fused glass piece etched and layered by hand — every one is a little different, just like every trail through the woods.',
+      'A hand-etched stained glass lantern glowing in cool blue tones, featuring a swirling wave emblem — a calming centerpiece for any room in the cave (or your own).',
     priceLabel: 'From the Troll Cave',
-    image: 'assets/products/product-14.jpg',
+    image: 'assets/products/product-9.jpg',
     etsyUrl: 'https://www.etsy.com/shop/ATrollPath'
   }
 ];
 
 /**
  * GROWTH POINT: past studio photos, kept for possible future use (e.g. a
- * "process" or "about" page) but no longer shown by the Workbench/Commissions
- * scene, which now spotlights custom commission pieces instead.
+ * "process" or "about" page) but no longer shown by the Workbench/Maker's
+ * Tower scene, which now spotlights custom commission pieces instead.
  */
 export const GALLERY_ITEMS: GalleryItem[] = [
-  { id: 'g1', image: 'assets/products/product-1.jpg', caption: 'Fresh from the kiln' },
+  { id: 'g1', image: 'assets/products/product-1.jpg', caption: 'Fresh from the studio' },
   { id: 'g2', image: 'assets/products/product-2.jpg', caption: 'Laser-etched detail work' },
   { id: 'g3', image: 'assets/products/product-4.jpg', caption: 'Studio treasures' },
   { id: 'g4', image: 'assets/products/product-5.jpg', caption: 'Glass catching the light' },
   { id: 'g5', image: 'assets/products/product-6.jpg', caption: 'Hand-finished edges' },
-  { id: 'g6', image: 'assets/products/product-7.jpg', caption: 'Fused glass in progress' },
-  { id: 'g7', image: 'assets/products/product-9.jpg', caption: 'A gothic glow' },
+  { id: 'g6', image: 'assets/products/product-7.jpg', caption: 'Etching in progress' },
+  { id: 'g7', image: 'assets/products/product-9.jpg', caption: 'A serene blue glow' },
   { id: 'g8', image: 'assets/products/product-10.jpg', caption: 'Etched black linework' },
   { id: 'g9', image: 'assets/products/product-11.jpg', caption: 'Ready for the Troll Cave' },
-  { id: 'g10', image: 'assets/products/product-12.jpg', caption: 'Studio session' },
+  { id: 'g10', image: 'assets/products/product-12.jpg', caption: 'Dragon egg kit, boxed up' },
   { id: 'g11', image: 'assets/products/product-13.jpg', caption: 'Color study' },
   { id: 'g12', image: 'assets/products/product-15.jpg', caption: 'Fresh design test' },
-  { id: 'g13', image: 'assets/products/product-16.jpg', caption: 'A piece in daylight' },
-  { id: 'g14', image: 'assets/products/product-17.jpg', caption: 'Lantern glow' },
+  { id: 'g13', image: 'assets/products/product-16.jpg', caption: '3D-printed dragon eggs, ready to paint' },
+  { id: 'g14', image: 'assets/products/product-17.jpg', caption: 'Kit packaging' },
   { id: 'g15', image: 'assets/products/product-18.jpg', caption: 'Detail shot' },
   { id: 'g16', image: 'assets/products/product-19.jpg', caption: 'Finishing touches' },
   { id: 'g17', image: 'assets/products/product-20.jpg', caption: 'From the workbench' }
@@ -68,7 +68,7 @@ export const GALLERY_ITEMS: GalleryItem[] = [
 
 /**
  * GROWTH POINT: this is the single source of truth for custom commission
- * pieces shown in the Commissions scene (the tower on the hero map). Add a
+ * pieces shown in the Maker's Tower scene (the tower on the hero map). Add a
  * new past commission here as you complete more — each becomes a clickable
  * artifact in the tower with its own inspect panel. Swap ctaUrl/ctaLabel for
  * a dedicated "request a commission" link once you have one.
