@@ -1,0 +1,21 @@
+<section id="gallery" class="gallery">
+  <div class="container">
+    <p class="eyebrow">Chapter Two</p>
+    <h2 class="gallery__title">From the Workbench</h2>
+    <p class="gallery__intro">
+      Peek inside the cave — real studio shots of pieces in progress and
+      finished treasures catching the light. Tap any image for a closer look.
+    </p>
+
+    <div class="gallery__grid">
+      @for (item of items; track item.id) {
+        <button type="button" class="gallery__tile" (click)="open(item)">
+          <img [src]="item.image" [alt]="item.caption" loading="lazy">
+          <span class="gallery__caption">{{ item.caption }}</span>
+        </button>
+      }
+    </div>
+  </div>
+
+  <app-lightbox [item]="selected" (closed)="close()"></app-lightbox>
+</section>

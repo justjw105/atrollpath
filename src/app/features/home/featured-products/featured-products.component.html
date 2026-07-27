@@ -1,0 +1,32 @@
+<section id="featured" class="featured">
+  <div class="container">
+    <p class="eyebrow">Chapter One</p>
+    <h2 class="featured__title">Treasures of the Cave</h2>
+    <p class="featured__intro">
+      Every piece is hand-cast and kiln-fused, then laser-etched with fine
+      linework for striking contrast against the glass. Here are a few of
+      the quests our customers return for again and again.
+    </p>
+
+    <div class="featured__grid">
+      @for (item of items; track item.id) {
+        <article class="quest-card">
+          @if (item.badge) {
+            <span class="quest-card__badge">{{ item.badge }}</span>
+          }
+          <div class="quest-card__image-wrap">
+            <img [src]="item.image" [alt]="item.name" class="quest-card__image">
+          </div>
+          <div class="quest-card__body">
+            <p class="quest-card__tagline">{{ item.tagline }}</p>
+            <h3 class="quest-card__name">{{ item.name }}</h3>
+            <p class="quest-card__desc">{{ item.description }}</p>
+            <a class="quest-card__cta" [href]="item.etsyUrl" target="_blank" rel="noopener">
+              View in the Troll Cave →
+            </a>
+          </div>
+        </article>
+      }
+    </div>
+  </div>
+</section>
