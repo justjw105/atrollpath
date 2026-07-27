@@ -1,0 +1,68 @@
+.hud {
+  position: fixed;
+  top: 18px;
+  left: 18px;
+  right: 18px;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  pointer-events: none;
+
+  > * {
+    pointer-events: auto;
+  }
+}
+
+.hud__spacer {
+  flex: 1;
+}
+
+.hud__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-heading);
+  font-size: 0.85rem;
+  letter-spacing: 0.03em;
+  color: var(--text-primary);
+  background: rgba(16, 25, 15, 0.78);
+  border: 2px solid rgba(240, 185, 74, 0.4);
+  border-radius: 999px;
+  padding: 9px 16px;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  transition: border-color 0.15s ease, transform 0.15s ease, background 0.15s ease;
+}
+
+.hud__btn:hover {
+  border-color: var(--color-amber-400);
+  transform: translateY(-1px);
+  background: rgba(16, 25, 15, 0.92);
+}
+
+.hud__btn--brand {
+  padding: 6px;
+  width: 42px;
+  height: 42px;
+  justify-content: center;
+}
+
+.hud__logo {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+}
+
+@media (max-width: 560px) {
+  .hud__btn-text {
+    display: none;
+  }
+
+  .hud__btn:not(.hud__btn--brand) {
+    width: 42px;
+    height: 42px;
+    justify-content: center;
+    padding: 0;
+  }
+}

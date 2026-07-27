@@ -1,0 +1,19 @@
+<div class="hud">
+  <button type="button" class="hud__btn hud__btn--brand" (click)="goHome()" aria-label="Return to cave entrance">
+    <img src="assets/img/logo.png" alt="" class="hud__logo">
+  </button>
+
+  <div class="hud__spacer"></div>
+
+  <button type="button" class="hud__btn" (click)="sfx.toggle()" [attr.aria-pressed]="sfx.enabled()">
+    @if (sfx.enabled()) {
+      <span>🔊 <span class="hud__btn-text">Sound</span></span>
+    } @else {
+      <span>🔇 <span class="hud__btn-text">Muted</span></span>
+    }
+  </button>
+
+  <button type="button" class="hud__btn hud__btn--map" (click)="scene.toggleMap()" [attr.aria-pressed]="scene.isMapOpen()">
+    🗺️ <span class="hud__btn-text">Map</span>
+  </button>
+</div>

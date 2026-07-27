@@ -1,0 +1,10 @@
+<div
+  class="iris"
+  [class.iris--closing]="scene.phase() === 'closing'"
+  [class.iris--black]="scene.phase() === 'open-black'"
+  [class.iris--opening]="scene.phase() === 'opening'"
+  [class.iris--idle]="scene.phase() === 'idle'"
+  aria-hidden="true"
+>
+  <div class="iris__torch"></div>
+</div>

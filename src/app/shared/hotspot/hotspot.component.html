@@ -1,0 +1,16 @@
+<button
+  type="button"
+  class="hotspot"
+  [class.hotspot--chest]="icon === 'chest'"
+  [class.hotspot--door]="icon === 'door'"
+  [class.hotspot--exit]="icon === 'exit'"
+  [style.left.%]="x"
+  [style.top.%]="y"
+  (mouseenter)="onHoverEnter()"
+  (focus)="onHoverEnter()"
+  (click)="onActivate()"
+>
+  <span class="hotspot__ring"></span>
+  <span class="hotspot__core"></span>
+  <span class="hotspot__label">{{ label }}</span>
+</button>

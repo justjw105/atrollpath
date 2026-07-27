@@ -1,0 +1,81 @@
+.hotspot {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  z-index: 5;
+}
+
+.hotspot__ring {
+  position: absolute;
+  inset: -14px;
+  border-radius: 50%;
+  border: 2px solid rgba(240, 185, 74, 0.55);
+  animation: pulse-ring 2.2s ease-out infinite;
+}
+
+.hotspot__core {
+  position: relative;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, var(--color-amber-400), var(--color-amber-600) 75%);
+  box-shadow: 0 0 18px 6px rgba(240, 185, 74, 0.55), 0 3px 8px rgba(0, 0, 0, 0.5);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.hotspot:hover .hotspot__core,
+.hotspot:focus-visible .hotspot__core {
+  transform: scale(1.22);
+  box-shadow: 0 0 28px 10px rgba(240, 185, 74, 0.75), 0 3px 10px rgba(0, 0, 0, 0.55);
+}
+
+.hotspot__label {
+  font-family: var(--font-heading);
+  font-size: 0.78rem;
+  letter-spacing: 0.05em;
+  color: var(--color-ink-900);
+  background: var(--color-amber-400);
+  border: 1px solid var(--color-amber-600);
+  padding: 4px 12px;
+  border-radius: 999px;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+}
+
+.hotspot:hover .hotspot__label,
+.hotspot:focus-visible .hotspot__label {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.hotspot--chest .hotspot__core {
+  background: radial-gradient(circle at 35% 30%, #ffd98a, #c9791f 75%);
+}
+
+.hotspot--door .hotspot__core,
+.hotspot--exit .hotspot__core {
+  background: radial-gradient(circle at 35% 30%, #9adfd1, #1a4a47 75%);
+  box-shadow: 0 0 18px 6px rgba(31, 92, 86, 0.55), 0 3px 8px rgba(0, 0, 0, 0.5);
+}
+
+.hotspot--door:hover .hotspot__core,
+.hotspot--exit:hover .hotspot__core {
+  box-shadow: 0 0 28px 10px rgba(31, 92, 86, 0.75), 0 3px 10px rgba(0, 0, 0, 0.55);
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.8); opacity: 0.8; }
+  70% { transform: scale(1.5); opacity: 0; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
