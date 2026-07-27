@@ -1,0 +1,46 @@
+<section class="scene scene--friends">
+  <img class="scene__bg" src="assets/img/scene-friends-crossroads.png" alt="A misty forest crossroads with welcome banners pointing toward distant friendly shops" >
+  <div class="scene__scrim"></div>
+
+  <div class="scene__intro">
+    <p class="eyebrow">Off the Beaten Path</p>
+    <h2 class="scene__title">Friends of the Troll</h2>
+    <p class="scene__subtitle">Fellow makers and shops we love — click a banner to visit their corner of the woods.</p>
+  </div>
+
+  @if (friends.length > 0) {
+    <div class="friend-row">
+      @for (shop of friends; track shop.id) {
+        <a
+          class="friend-card"
+          [href]="shop.url"
+          target="_blank"
+          rel="noopener"
+          (mouseenter)="onHover()"
+        >
+          <div class="friend-card__image-wrap">
+            <img [src]="shop.image" [alt]="shop.name" class="friend-card__image">
+          </div>
+          <p class="friend-card__tagline">{{ shop.tagline }}</p>
+          <h3 class="friend-card__name">{{ shop.name }}</h3>
+        </a>
+      }
+
+      <div class="friend-card friend-card--coming-soon">
+        <div class="friend-card__image-wrap friend-card__image-wrap--placeholder">
+          <span class="friend-card__plus">+</span>
+        </div>
+        <p class="friend-card__tagline">More allies to come</p>
+        <h3 class="friend-card__name">More Friends Coming Soon</h3>
+      </div>
+    </div>
+  } @else {
+    <div class="friend-empty">
+      <div class="friend-empty__badge">+</div>
+      <p class="friend-empty__title">The signposts are ready</p>
+      <p class="friend-empty__body">This path is being cleared for fellow makers and shops we want to send you to. Check back soon!</p>
+    </div>
+  }
+
+  <app-hotspot [x]="12" [y]="88" icon="sign" label="Back to the Crossroads" (activate)="go('hero')" />
+</section>

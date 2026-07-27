@@ -36,7 +36,8 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
   readonly hotspots: MapHotspot[] = [
     { id: 'treasure', x: 20, y: 58, icon: 'door', label: 'Enter the Treasure Room', target: 'featured' },
     { id: 'workbench', x: 57, y: 32, icon: 'sign', label: "Enter the Maker's Tower", target: 'gallery' },
-    { id: 'exit', x: 87, y: 60, icon: 'exit', label: 'Step into the Troll Cave (Etsy)', target: 'visit' }
+    { id: 'exit', x: 87, y: 60, icon: 'exit', label: 'Step into the Troll Cave (Etsy)', target: 'visit' },
+    { id: 'friends', x: 42, y: 49, icon: 'sign', label: 'Friends of the Troll', target: 'friends' }
   ];
 
   private readonly scrollLeft = signal(0);

@@ -36,3 +36,16 @@ export interface CommissionPiece {
   ctaLabel?: string;
   ctaUrl?: string;
 }
+
+/**
+ * A partnered/friend shop featured in the "Friends of the Troll" scene.
+ * These are external shops you want to cross-promote — clicking a card
+ * sends the visitor straight to that shop's page in a new tab.
+ */
+export interface FriendShop {
+  id: string;
+  name: string;
+  tagline: string;
+  image: string;
+  url: string;
+}

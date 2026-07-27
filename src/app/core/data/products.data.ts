@@ -1,4 +1,4 @@
-import { Product, GalleryItem, CommissionPiece } from '../models/product.model';
+import { Product, GalleryItem, CommissionPiece, FriendShop } from '../models/product.model';
 
 /**
  * GROWTH POINT: this is the single source of truth for featured products.
@@ -76,6 +76,15 @@ export const COMMISSIONS: CommissionPiece[] = [
     ctaUrl: 'https://www.etsy.com/shop/ATrollPath'
   }
 ];
+
+/**
+ * GROWTH POINT: this is the single source of truth for partnered/friend
+ * shops shown in the "Friends of the Troll" scene. Add a shop here —
+ * { id, name, tagline, image, url } — and it appears automatically as a
+ * clickable card that opens that shop in a new tab. Empty by default;
+ * the scene shows a friendly "coming soon" placeholder until you add one.
+ */
+export const FRIEND_SHOPS: FriendShop[] = [];
 
 export const ETSY_SHOP_URL = 'https://www.etsy.com/shop/ATrollPath';
 export const FACEBOOK_URL = 'https://www.facebook.com/profile.php?id=61558581587381';

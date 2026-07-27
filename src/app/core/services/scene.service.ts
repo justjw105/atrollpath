@@ -18,14 +18,16 @@ export interface SceneNode {
  * The map overlay and HUD pick new scenes up automatically.
  *
  * x/y here are calibrated to match the actual landmarks painted into
- * hero-map.png (the tree cave-door, the workshop tower, and the rocky
- * cave entrance) so the overlay markers land on the right spots.
+ * hero-map.png (the tree cave-door, the workshop tower, the rocky
+ * cave entrance, and the path receding into the distance) so the
+ * overlay markers land on the right spots.
  */
 export const SCENES: SceneNode[] = [
   { id: 'hero', label: 'The Path', x: 50, y: 88 },
   { id: 'featured', label: 'Treasure Room', x: 20, y: 58 },
   { id: 'gallery', label: "The Maker's Tower", x: 57, y: 32 },
-  { id: 'visit', label: 'Troll Cave Exit', x: 87, y: 60 }
+  { id: 'visit', label: 'Troll Cave Exit', x: 87, y: 60 },
+  { id: 'friends', label: 'Friends of the Troll', x: 42, y: 49 }
 ];
 
 export type TransitionPhase = 'idle' | 'closing' | 'open-black' | 'opening';

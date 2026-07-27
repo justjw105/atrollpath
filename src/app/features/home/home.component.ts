@@ -3,6 +3,7 @@ import { HeroComponent } from './hero/hero.component';
 import { FeaturedProductsComponent } from './featured-products/featured-products.component';
 import { GalleryComponent } from './gallery/gallery.component';
 import { EtsyCtaComponent } from './etsy-cta/etsy-cta.component';
+import { FriendsComponent } from './friends/friends.component';
 import { SceneService } from '../../core/services/scene.service';
 
 /**
@@ -17,7 +18,7 @@ import { SceneService } from '../../core/services/scene.service';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [HeroComponent, FeaturedProductsComponent, GalleryComponent, EtsyCtaComponent],
+  imports: [HeroComponent, FeaturedProductsComponent, GalleryComponent, EtsyCtaComponent, FriendsComponent],
   templateUrl: './home.component.html'
 })
 export class HomeComponent {
