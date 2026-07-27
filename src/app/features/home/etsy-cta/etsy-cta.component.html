@@ -1,17 +1,20 @@
-<section id="visit" class="cta">
-  <div class="container cta__inner">
+<section class="scene scene--exit">
+  <img class="scene__bg" src="assets/img/scene-cave-door.png" alt="A grand cave doorway with warm light spilling through" >
+  <div class="scene__scrim"></div>
+
+  <div class="scene__content">
     <p class="eyebrow">Final Chapter</p>
-    <h2 class="cta__title">The Troll Cave awaits</h2>
-    <p class="cta__body">
-      Every treasure you've seen here lives in our Etsy shop — Troll Cave —
+    <h2 class="scene__title">The Troll Cave awaits</h2>
+    <p class="scene__body">
+      Every treasure you've found lives in our Etsy shop — Troll Cave —
       ready to ship straight from the workbench to your door.
     </p>
-    <div class="cta__actions">
-      <a class="btn-quest" [href]="etsyUrl" target="_blank" rel="noopener">Visit Troll Cave on Etsy →</a>
-      <div class="cta__social">
-        <a [href]="facebookUrl" target="_blank" rel="noopener">Facebook</a>
-        <a [href]="pinterestUrl" target="_blank" rel="noopener">Pinterest</a>
-      </div>
+    <a class="btn-quest scene__cta" [href]="etsyUrl" target="_blank" rel="noopener">Step Through to Etsy →</a>
+    <div class="scene__social">
+      <a [href]="facebookUrl" target="_blank" rel="noopener">Facebook</a>
+      <a [href]="pinterestUrl" target="_blank" rel="noopener">Pinterest</a>
     </div>
   </div>
+
+  <app-hotspot [x]="10" [y]="88" icon="door" label="Return to the Cave" (activate)="go('hero')" />
 </section>

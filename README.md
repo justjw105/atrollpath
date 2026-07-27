@@ -1,29 +1,42 @@
 # ATrollPath
 
-Whimsical fantasy landing page for the ATrollPath Etsy shop (Troll Cave) — built with Angular 18 (standalone components).
+A point-and-click, video-game-style landing page for the ATrollPath Etsy shop (Troll Cave) — built with Angular 18 (standalone components + signals).
 
-## Design
+## How it works
 
-- **Theme**: cozy troll/gnome cave, woodland fantasy — moss, amber lantern light, hand-carved wood.
-- **Navigation**: a video-game "world map" — click glowing waypoints to travel between sections.
-- **Growth-ready**: products and gallery images live in `src/app/core/data/products.data.ts`. Add a product/photo there and it shows up automatically. New page sections are documented inline in `src/app/features/home/home.component.ts` and `src/app/core/services/scroll-spy.service.ts`.
+This isn't a scrolling website — it's a small point-and-click adventure:
 
-## ⚠️ Image assets (required before first run)
+- **Scenes, not sections.** Only one full-screen scene is ever on stage at a time: **Cave Entrance → Treasure Room → Workbench → Troll Cave Exit**. Navigation is a `SceneService` signal (`core/services/scene.service.ts`), not scroll position.
+- **Hotspots.** Every place you can travel to is a glowing, pulsing hotspot drawn directly on the scene artwork (`shared/hotspot/`) — click a hotspot to go there, exactly like a classic point-and-click adventure game.
+- **Iris-wipe transitions.** Traveling between scenes plays an old-game circle-close/circle-open transition (`shared/scene-transition/`) with a torch-flicker loading beat and a whoosh + chime sound effect.
+- **Quest Map overlay.** The HUD's map button (`shared/game-hud/`) opens a full map overlay (`shared/quest-map-overlay/`) so you can jump to any scene directly, like a game's pause-menu map.
+- **Inspect-item panels.** Clicking a product or gallery photo opens an inventory-style "item found" panel (`shared/item-inspect/`) instead of a plain lightbox.
+- **Sound.** Soft hover ticks, a travel chime, and a scene-transition whoosh, togglable from the HUD and persisted to `localStorage` (`core/services/sfx.service.ts`).
+- **Intro splash.** A "Click to Begin Your Quest" screen unlocks audio playback (browsers block autoplay before a user gesture) and sets the tone immediately.
 
-The source code in this repo is complete, but the image files themselves (the
-generated fantasy illustrations + your studio product photos, ~16MB total)
-are **not committed to git** — they were generated/uploaded in a chat session
-and are provided as a one-time download instead of bloating the repo history.
+## Growth points
+
+- **Add a product or gallery photo**: edit `src/app/core/data/products.data.ts`. No other file changes.
+- **Add a new scene**: add an entry to `SCENES` in `core/services/scene.service.ts`, create a component under `features/home/<scene-name>/`, add a `@case` in `home.component.html`, and add a hotspot somewhere that leads to it.
+
+## ⚠️ Image & audio assets (required before first run)
+
+The source code in this repo is complete, but the generated illustrations, your
+studio product photos, and the sound effects (~16MB total) are **not committed
+to git** — they were generated/uploaded in a chat session and are provided as a
+one-time download instead of bloating the repo history.
 
 1. Download the asset bundle: **(link shared with you in the Magica chat that built this project)**
 2. Unzip it so you end up with:
    ```
-   atrollpath/public/assets/img/       <- hero-cave.png, nav-map.png, frame.png, logo.png
+   atrollpath/public/assets/img/       <- hero-cave.png, nav-map.png, frame.png, logo.png,
+                                          scene-treasure-room.png, scene-workbench.png, scene-cave-door.png
    atrollpath/public/assets/products/  <- product-1.jpg ... product-20.jpg
+   atrollpath/public/assets/sfx/       <- chime.mp3, tick.mp3, whoosh.mp3
    ```
-3. From then on, treat `public/assets/` like any other tracked folder — add new product photos there and reference them in `products.data.ts`.
+3. From then on, treat `public/assets/` like any other tracked folder — add new product photos there and reference them in `products.data.ts`. New scene backgrounds go in `public/assets/img/`.
 
-If you'd rather version images in git going forward, just `git add public/assets` and commit — nothing in `.gitignore` excludes it; they were simply left out of the initial automated push.
+If you'd rather version assets in git going forward, just `git add public/assets` and commit — nothing in `.gitignore` excludes it; they were simply left out of the initial automated push.
 
 ## Development
 
