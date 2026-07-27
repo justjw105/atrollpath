@@ -2,33 +2,34 @@
   position: fixed;
   inset: 0;
   z-index: 200;
-  background: radial-gradient(circle at center, transparent 0%, #050704 0%);
+  background: #050704;
+  clip-path: circle(0% at 50% 50%);
   pointer-events: none;
   display: grid;
   place-items: center;
 }
 
+/* idle: fully clipped away (invisible), scene shows through normally */
 .iris--idle {
-  clip-path: circle(150% at 50% 50%);
-  background: transparent;
-  transition: none;
+  clip-path: circle(0% at 50% 50%);
 }
 
+/* closing: grow the black circle from nothing to full coverage */
 .iris--closing {
-  clip-path: circle(150% at 50% 50%);
-  background: #050704;
   animation: iris-close 0.48s ease-in forwards;
+  pointer-events: auto;
 }
 
+/* held fully black while the scene underneath is swapped */
 .iris--black {
-  clip-path: circle(0% at 50% 50%);
-  background: #050704;
+  clip-path: circle(150% at 50% 50%);
+  pointer-events: auto;
 }
 
+/* opening: shrink the black circle back to nothing, revealing the new scene */
 .iris--opening {
-  clip-path: circle(0% at 50% 50%);
-  background: #050704;
   animation: iris-open 0.52s ease-out forwards;
+  pointer-events: auto;
 }
 
 .iris__torch {
@@ -46,13 +47,13 @@
 }
 
 @keyframes iris-close {
-  from { clip-path: circle(150% at 50% 50%); }
-  to { clip-path: circle(0% at 50% 50%); }
+  from { clip-path: circle(0% at 50% 50%); }
+  to { clip-path: circle(150% at 50% 50%); }
 }
 
 @keyframes iris-open {
-  from { clip-path: circle(0% at 50% 50%); }
-  to { clip-path: circle(150% at 50% 50%); }
+  from { clip-path: circle(150% at 50% 50%); }
+  to { clip-path: circle(0% at 50% 50%); }
 }
 
 @keyframes flicker {
