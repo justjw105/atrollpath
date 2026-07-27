@@ -1,0 +1,28 @@
+@if (item) {
+  <div class="inspect" role="dialog" aria-modal="true" (click)="close()">
+    <div class="inspect__panel" (click)="$event.stopPropagation()">
+      <button type="button" class="inspect__close" (click)="close()" aria-label="Close">✕</button>
+
+      <div class="inspect__art">
+        <img [src]="item.image" [alt]="item.title">
+        <img class="inspect__frame" src="assets/img/frame.png" alt="" aria-hidden="true">
+        @if (item.badge) {
+          <span class="inspect__badge">{{ item.badge }}</span>
+        }
+      </div>
+
+      <div class="inspect__body">
+        <p class="eyebrow">Item Found</p>
+        <h3 class="inspect__title">{{ item.title }}</h3>
+        @if (item.description) {
+          <p class="inspect__desc">{{ item.description }}</p>
+        }
+        @if (item.ctaUrl) {
+          <a class="btn-quest" [href]="item.ctaUrl" target="_blank" rel="noopener">
+            {{ item.ctaLabel || 'View in the Troll Cave →' }}
+          </a>
+        }
+      </div>
+    </div>
+  </div>
+}

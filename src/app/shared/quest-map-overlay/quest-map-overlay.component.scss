@@ -1,0 +1,151 @@
+.map-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 150;
+  background: rgba(5, 7, 4, 0.82);
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  animation: fade-in 0.18s ease;
+}
+
+.map-overlay__panel {
+  width: min(920px, 100%);
+  background: var(--color-moss-900);
+  border: 2px solid var(--border-glow);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+}
+
+.map-overlay__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.map-overlay__close {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 2px solid var(--color-amber-500);
+  background: var(--color-moss-800);
+  color: var(--accent-strong);
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.map-overlay__frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 8;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 2px solid rgba(240, 185, 74, 0.3);
+
+  @media (max-width: 640px) {
+    aspect-ratio: 4 / 5;
+  }
+}
+
+.map-overlay__bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(1.05) brightness(0.85);
+}
+
+.map-overlay__path {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  inset: 0;
+}
+
+.map-overlay__hint {
+  margin: 14px 0 0;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.map-node {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.map-node__marker {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid var(--color-amber-600);
+  background: radial-gradient(circle at 35% 30%, #3a2a17, #16241a 70%);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 0 0 4px rgba(16, 25, 15, 0.6), 0 4px 14px rgba(0, 0, 0, 0.5);
+  transition: transform 0.2s ease;
+}
+
+.map-node__marker:hover {
+  transform: scale(1.15);
+}
+
+.map-node__torch {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(240, 185, 74, 0.55), transparent 70%);
+  opacity: 0.55;
+  animation: flicker 2.4s ease-in-out infinite;
+}
+
+.map-node__step {
+  position: relative;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  color: var(--accent-strong);
+}
+
+.map-node__label {
+  font-family: var(--font-heading);
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  background: rgba(16, 25, 15, 0.75);
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(240, 185, 74, 0.25);
+  white-space: nowrap;
+}
+
+.map-node.is-active .map-node__marker {
+  border-color: var(--color-amber-400);
+  box-shadow: 0 0 0 5px rgba(240, 185, 74, 0.28), 0 0 26px rgba(240, 185, 74, 0.55);
+}
+
+.map-node.is-active .map-node__label {
+  background: var(--color-amber-400);
+  color: var(--color-ink-900);
+  border-color: var(--color-amber-400);
+}
+
+@keyframes flicker {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 0.9; transform: scale(1.15); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
