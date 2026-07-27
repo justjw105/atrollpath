@@ -1,18 +1,18 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { HeroComponent } from './hero/hero.component';
 import { FeaturedProductsComponent } from './featured-products/featured-products.component';
 import { GalleryComponent } from './gallery/gallery.component';
 import { EtsyCtaComponent } from './etsy-cta/etsy-cta.component';
+import { SceneService } from '../../core/services/scene.service';
 
 /**
- * GROWTH POINT: this page is a thin composition of section components.
- * To add a new section (e.g. "About", "Reviews", "Custom Orders"):
- *   1. Create a new folder under features/home/<section-name>/ with its
- *      own component (copy the pattern used by gallery/ or etsy-cta/).
- *   2. Import it here and drop <app-your-section> in the template below,
- *      wrapped in a <section id="your-id">.
- *   3. Add a matching entry to QUEST_NODES in core/services/scroll-spy.service.ts
- *      so the world-map nav grows a new waypoint automatically.
+ * GROWTH POINT: this is the scene stage. Exactly one scene renders at a
+ * time, driven by SceneService.activeSceneId. To add a new scene:
+ *   1. Add an entry to SCENES in core/services/scene.service.ts.
+ *   2. Create a component under features/home/<scene-name>/ (copy an
+ *      existing scene like gallery/ as a starting point).
+ *   3. Import it here and add a matching @case below.
+ *   4. Add a hotspot in whichever scene should lead to it.
  */
 @Component({
   selector: 'app-home',
@@ -20,4 +20,6 @@ import { EtsyCtaComponent } from './etsy-cta/etsy-cta.component';
   imports: [HeroComponent, FeaturedProductsComponent, GalleryComponent, EtsyCtaComponent],
   templateUrl: './home.component.html'
 })
-export class HomeComponent {}
+export class HomeComponent {
+  readonly scene = inject(SceneService);
+}

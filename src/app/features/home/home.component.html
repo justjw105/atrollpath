@@ -1,4 +1,6 @@
-<app-hero />
-<app-featured-products />
-<app-gallery />
-<app-etsy-cta />
+@switch (scene.activeSceneId()) {
+  @case ('hero') { <app-hero /> }
+  @case ('featured') { <app-featured-products /> }
+  @case ('gallery') { <app-gallery /> }
+  @case ('visit') { <app-etsy-cta /> }
+}
