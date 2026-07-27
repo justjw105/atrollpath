@@ -1,29 +1,53 @@
 .scene {
   position: relative;
-  min-height: 100vh;
+  height: 100vh;
   width: 100%;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   display: flex;
-  align-items: flex-end;
+  align-items: stretch;
+  justify-content: center;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Sized to the image's own intrinsic aspect ratio at full viewport height —
+   never cropped, so hotspot percentages always land on the right pixels.
+   If it's wider than the viewport (narrow/short screens), the .scene
+   container scrolls horizontally instead of squashing or cropping it. */
+.map-canvas {
+  position: relative;
+  height: 100%;
+  flex: 0 0 auto;
+  display: inline-block;
 }
 
 .scene__bg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
   height: 100%;
-  object-fit: cover;
+  width: auto;
+  max-width: none;
+  display: block;
 }
 
 .scene__scrim {
-  position: absolute;
+  position: fixed;
   inset: 0;
+  z-index: 1;
+  pointer-events: none;
   background: linear-gradient(180deg, rgba(10, 16, 10, 0.05) 0%, rgba(10, 16, 10, 0.18) 55%, rgba(10, 16, 10, 0.7) 100%);
 }
 
 .scene__intro {
-  position: relative;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
   z-index: 2;
+  pointer-events: none;
   padding: 0 32px 48px;
   max-width: 680px;
 }

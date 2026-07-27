@@ -11,6 +11,8 @@
 
 .map-overlay__panel {
   width: min(920px, 100%);
+  max-height: 90vh;
+  overflow-y: auto;
   background: var(--color-moss-900);
   border: 2px solid var(--border-glow);
   border-radius: var(--radius-lg);
@@ -36,17 +38,17 @@
   font-size: 1rem;
 }
 
+/* Fixed to the source image's own aspect ratio (2048x1152) at every screen
+   size so object-fit: cover never has anything to crop — the container
+   shape always exactly matches the image shape, so hotspot percentages
+   always line up with the real landmarks, same fix as the hero scene. */
 .map-overlay__frame {
   position: relative;
   width: 100%;
-  aspect-ratio: 16 / 8;
+  aspect-ratio: 2048 / 1152;
   border-radius: var(--radius-md);
   overflow: hidden;
   border: 2px solid rgba(240, 185, 74, 0.3);
-
-  @media (max-width: 640px) {
-    aspect-ratio: 4 / 5;
-  }
 }
 
 .map-overlay__bg {
