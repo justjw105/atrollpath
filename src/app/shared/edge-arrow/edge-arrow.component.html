@@ -1,0 +1,12 @@
+<button
+  type="button"
+  class="edge-arrow"
+  [class.edge-arrow--left]="side === 'left'"
+  [class.edge-arrow--right]="side === 'right'"
+  [style.top.%]="y"
+  (mouseenter)="onHoverEnter()"
+  (click)="onActivate()"
+>
+  <span class="edge-arrow__chevron"></span>
+  <span class="edge-arrow__label">{{ label }}</span>
+</button>

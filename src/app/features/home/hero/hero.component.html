@@ -1,13 +1,17 @@
-<section class="scene scene--hero" appEdgeScroll>
-  <div class="map-canvas">
+<section class="scene scene--hero" appEdgeScroll (scroll)="onScroll($event)">
+  <div class="map-canvas" #canvas>
     <img class="scene__bg" src="assets/img/hero-map.png" alt="A fantasy map showing the troll's cave, a workshop tower, and a rocky cave entrance connected by a winding path" >
 
-    <app-hotspot [x]="20" [y]="58" icon="door" label="Enter the Treasure Room" (activate)="go('featured')" />
-    <app-hotspot [x]="57" [y]="32" icon="sign" label="Visit the Workbench Tower" (activate)="go('gallery')" />
-    <app-hotspot [x]="87" [y]="60" icon="exit" label="Step into the Troll Cave (Etsy)" (activate)="go('visit')" />
+    @for (h of hotspots; track h.id) {
+      <app-hotspot [x]="h.x" [y]="h.y" [icon]="h.icon" [label]="h.label" (activate)="go(h.target)" />
+    }
   </div>
 
   <div class="scene__scrim"></div>
+
+  @for (marker of offscreenMarkers(); track marker.id) {
+    <app-edge-arrow [side]="marker.side" [y]="marker.y" [label]="marker.label" (activate)="go(marker.target)" />
+  }
 
   <div class="scene__intro">
     <p class="eyebrow">A quest begins at the Troll Cave</p>
