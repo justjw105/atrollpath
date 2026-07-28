@@ -5,6 +5,8 @@ import { Product, GalleryItem, CommissionPiece, FriendShop } from '../models/pro
  * To add a new product, push a new object here — the featured-products
  * section and (soon) a full shop page will pick it up automatically.
  * Swap placeholder prices/copy for your real Etsy listing details.
+ * `images` (optional) adds extra photos to the inspect-panel gallery —
+ * list the same photo as `image` first if you want it as the opening shot.
  */
 export const FEATURED_PRODUCTS: Product[] = [
   {
@@ -15,6 +17,12 @@ export const FEATURED_PRODUCTS: Product[] = [
       'A set of white, 3D-printed dragon eggs paired with everything you need to paint your own scales and markings — our best-selling quest for aspiring dragon keepers.',
     priceLabel: 'From the Troll Cave',
     image: 'assets/products/product-12.jpg',
+    images: [
+      'assets/products/product-12.jpg',
+      'assets/products/product-16.jpg',
+      'assets/products/product-13.jpg',
+      'assets/products/product-17.jpg'
+    ],
     etsyUrl: 'https://www.etsy.com/shop/ATrollPath',
     badge: 'Top Seller'
   },
@@ -26,6 +34,13 @@ export const FEATURED_PRODUCTS: Product[] = [
       'A gothic stained-glass lantern inspired by Avatar: The Last Airbender, laser-etched with one pane per bending element — a fiery orange flame for Fire, a swirling wave for Water, a solid emblem for Earth, and a matching mark for Air — each pane glowing in its own elemental color.',
     priceLabel: 'From the Troll Cave',
     image: 'assets/products/product-7.jpg',
+    images: [
+      'assets/products/product-7.jpg',
+      'assets/products/product-8.jpg',
+      'assets/products/product-9.jpg',
+      'assets/products/product-10.jpg',
+      'assets/products/product-6.jpg'
+    ],
     etsyUrl: 'https://www.etsy.com/shop/ATrollPath',
     badge: 'Fan Favorite'
   }
@@ -61,7 +76,8 @@ export const GALLERY_ITEMS: GalleryItem[] = [
  * pieces shown in the Maker's Tower scene (the tower on the hero map). Add a
  * new past commission here as you complete more — each becomes a clickable
  * artifact in the tower with its own inspect panel. Swap ctaUrl/ctaLabel for
- * a dedicated "request a commission" link once you have one.
+ * a dedicated "request a commission" link once you have one. `images`
+ * (optional) adds extra photos to the inspect-panel gallery.
  */
 export const COMMISSIONS: CommissionPiece[] = [
   {

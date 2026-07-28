@@ -31,7 +31,7 @@ export class FeaturedProductsComponent {
   inspect(item: (typeof this.items)[number]): void {
     this.sfx.play('tick');
     this.selected = {
-      image: item.image,
+      images: item.images && item.images.length > 0 ? item.images : [item.image],
       title: item.name,
       description: item.description,
       badge: item.badge,

@@ -4,10 +4,27 @@
       <button type="button" class="inspect__close" (click)="close()" aria-label="Close">✕</button>
 
       <div class="inspect__art">
-        <img [src]="item.image" [alt]="item.title">
+        <img [src]="item.images[activeIndex()]" [alt]="item.title">
         <img class="inspect__frame" src="assets/img/frame.png" alt="" aria-hidden="true">
         @if (item.badge) {
           <span class="inspect__badge">{{ item.badge }}</span>
+        }
+
+        @if (item.images.length > 1) {
+          <button type="button" class="inspect__nav inspect__nav--prev" (click)="prev($event)" aria-label="Previous photo">‹</button>
+          <button type="button" class="inspect__nav inspect__nav--next" (click)="next($event)" aria-label="Next photo">›</button>
+
+          <div class="inspect__dots">
+            @for (photo of item.images; track $index) {
+              <button
+                type="button"
+                class="inspect__dot"
+                [class.is-active]="$index === activeIndex()"
+                (click)="selectIndex($index, $event)"
+                [attr.aria-label]="'Photo ' + ($index + 1)"
+              ></button>
+            }
+          </div>
         }
       </div>
 

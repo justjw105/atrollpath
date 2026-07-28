@@ -10,6 +10,8 @@ export interface Product {
   description: string;
   priceLabel: string;
   image: string;
+  /** Extra photos shown in the inspect-panel gallery (in addition to `image`). Optional. */
+  images?: string[];
   etsyUrl: string;
   badge?: string;
 }
@@ -32,6 +34,8 @@ export interface CommissionPiece {
   tagline: string;
   description: string;
   image: string;
+  /** Extra photos shown in the inspect-panel gallery (in addition to `image`). Optional. */
+  images?: string[];
   badge?: string;
   ctaLabel?: string;
   ctaUrl?: string;
