@@ -3,7 +3,7 @@
   <div class="scene__scrim"></div>
 
   <div class="scene__intro">
-    <p class="eyebrow">Off the Beaten Path</p>
+    <p class="eyebrow">Chapter Two</p>
     <h2 class="scene__title">Friends of the Troll</h2>
     <p class="scene__subtitle">Fellow makers and shops we love — click a banner to visit their corner of the woods.</p>
   </div>
@@ -42,5 +42,6 @@
     </div>
   }
 
-  <app-hotspot [x]="12" [y]="88" icon="sign" label="Back to the Crossroads" (activate)="go('hero')" />
+  <app-hotspot [x]="12" [y]="88" icon="sign" label="Back to Treasure Room" (activate)="go('featured')" />
+  <app-hotspot [x]="88" [y]="88" icon="sign" label="Continue to the Maker's Tower" (activate)="go('gallery')" />
 </section>
