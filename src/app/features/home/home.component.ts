@@ -17,9 +17,11 @@ import { SceneService } from '../../core/services/scene.service';
  *   4. Import it here and add a matching @case below.
  *   5. Add a hotspot in whichever scene should lead to it.
  *
- * The initial scene is read once from the matched route's `sceneId` data —
- * this is what makes each scene a real, distinct, bookmarkable/shareable
- * URL instead of everything living behind only client-side clicks.
+ * The initial scene (and, for Treasure Room / The Maker's Tower, the
+ * initial item modal) is read once from the matched route's data/params —
+ * this is what makes each scene AND each product/commission a real,
+ * distinct, bookmarkable/shareable URL instead of everything living behind
+ * only client-side clicks.
  */
 @Component({
   selector: 'app-home',
@@ -33,6 +35,7 @@ export class HomeComponent {
 
   constructor() {
     const initialSceneId = this.route.snapshot.data['sceneId'] as string | undefined;
-    this.scene.setInitialScene(initialSceneId ?? 'hero');
+    const initialItemSlug = this.route.snapshot.paramMap.get('item');
+    this.scene.setInitialScene(initialSceneId ?? 'hero', initialItemSlug);
   }
 }

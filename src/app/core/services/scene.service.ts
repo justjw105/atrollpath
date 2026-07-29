@@ -2,6 +2,7 @@ import { Location } from '@angular/common';
 import { Injectable, inject, signal } from '@angular/core';
 import { SfxService } from './sfx.service';
 import { SeoService, SceneSeo } from './seo.service';
+import { FEATURED_PRODUCTS, COMMISSIONS } from '../data/products.data';
 
 export interface SceneNode {
   id: string;
@@ -77,6 +78,52 @@ const SCENE_SEO: Record<string, SceneSeo> = {
 
 const PATH_TO_SCENE: Record<string, string> = Object.fromEntries(SCENES.map((s) => [s.path, s.id]));
 
+/**
+ * GROWTH POINT: every product/commission gets its own real, shareable,
+ * SEO-distinct URL (e.g. /treasure-room/dragon-egg-paint-kit) automatically
+ * derived from FEATURED_PRODUCTS/COMMISSIONS in products.data.ts — nothing
+ * to maintain by hand here. The modal still opens over the parent scene;
+ * only the URL/title/description/OG-image change.
+ */
+interface ItemSeoEntry extends SceneSeo {
+  sceneId: string;
+}
+
+const ITEM_SEO: Record<string, ItemSeoEntry> = {
+  ...Object.fromEntries(
+    FEATURED_PRODUCTS.map((p) => [
+      p.id,
+      {
+        sceneId: 'featured',
+        path: `/treasure-room/${p.id}`,
+        title: `${p.name} | Treasure Room — ATrollPath`,
+        description: p.description,
+        image: p.image
+      }
+    ])
+  ),
+  ...Object.fromEntries(
+    COMMISSIONS.map((c) => [
+      c.id,
+      {
+        sceneId: 'gallery',
+        path: `/the-makers-tower/${c.id}`,
+        title: `${c.name} | The Maker's Tower — ATrollPath`,
+        description: c.description,
+        image: c.image
+      }
+    ])
+  )
+};
+
+function parseUrl(url: string): { sceneId: string | null; itemSlug: string | null } {
+  const path = (url ?? '/').split(/[?#]/)[0] || '/';
+  const parts = path.split('/').filter(Boolean);
+  if (parts.length === 0) return { sceneId: 'hero', itemSlug: null };
+  const sceneId = PATH_TO_SCENE['/' + parts[0]] ?? null;
+  return { sceneId, itemSlug: parts[1] ?? null };
+}
+
 export type TransitionPhase = 'idle' | 'closing' | 'open-black' | 'opening';
 
 const IRIS_CLOSE_MS = 480;
@@ -90,27 +137,50 @@ export class SceneService {
   private readonly location = inject(Location);
 
   readonly activeSceneId = signal<string>(SCENES[0].id);
+  readonly activeItemSlug = signal<string | null>(null);
   readonly phase = signal<TransitionPhase>('idle');
   readonly isMapOpen = signal(false);
 
   private navToken = 0;
+  /** True once an item modal was opened by an in-app click (so "close" can safely use history.back()). */
+  private itemOpenedInternally = false;
 
   constructor() {
-    // Browser back/forward: sync the scene (with the same animation) without re-pushing history.
+    // Browser back/forward: sync scene + item modal state (and SEO) without re-pushing history.
     this.location.subscribe((event) => {
-      const path = (event.url ?? '/').split(/[?#]/)[0] || '/';
-      const id = PATH_TO_SCENE[path];
-      if (id && id !== this.activeSceneId()) {
-        this.navigateTo(id, { updateHistory: false });
+      const { sceneId, itemSlug } = parseUrl(event.url ?? '/');
+
+      if (itemSlug && ITEM_SEO[itemSlug]) {
+        this.activeItemSlug.set(itemSlug);
+        this.seo.apply(this.toSceneSeo(ITEM_SEO[itemSlug]));
+        if (sceneId && sceneId !== this.activeSceneId()) {
+          this.activeSceneId.set(sceneId);
+        }
+        return;
+      }
+
+      this.activeItemSlug.set(null);
+
+      if (sceneId && sceneId !== this.activeSceneId()) {
+        this.navigateTo(sceneId, { updateHistory: false });
+      } else if (sceneId) {
+        this.applySeo(sceneId);
       }
     });
   }
 
-  /** Called once on app boot with the scene matched from the initial route — no animation, no history push. */
-  setInitialScene(id: string): void {
+  /** Called once on app boot with the scene (and optional item) matched from the initial route. */
+  setInitialScene(id: string, itemSlug?: string | null): void {
     const resolved = SCENE_SEO[id] ? id : SCENES[0].id;
     this.activeSceneId.set(resolved);
-    this.applySeo(resolved);
+    this.itemOpenedInternally = false;
+
+    if (itemSlug && ITEM_SEO[itemSlug]) {
+      this.activeItemSlug.set(itemSlug);
+      this.seo.apply(this.toSceneSeo(ITEM_SEO[itemSlug]));
+    } else {
+      this.applySeo(resolved);
+    }
   }
 
   navigateTo(id: string, options: { updateHistory?: boolean } = {}): void {
@@ -121,6 +191,7 @@ export class SceneService {
     const updateHistory = options.updateHistory ?? true;
     const token = ++this.navToken;
     this.isMapOpen.set(false);
+    this.activeItemSlug.set(null);
     this.sfx.play('whoosh');
     this.phase.set('closing');
 
@@ -147,6 +218,34 @@ export class SceneService {
     }, IRIS_CLOSE_MS);
   }
 
+  /** Opens a product/commission's inspect modal, giving it its own URL + SEO tags. */
+  openItem(itemId: string): void {
+    const entry = ITEM_SEO[itemId];
+    if (!entry) return;
+
+    this.sfx.play('tick');
+    this.activeItemSlug.set(itemId);
+    this.itemOpenedInternally = true;
+    this.location.go(entry.path);
+    this.seo.apply(this.toSceneSeo(entry));
+  }
+
+  /** Closes the currently-open item modal, restoring the parent scene's URL + SEO. */
+  closeItem(): void {
+    if (!this.activeItemSlug()) return;
+
+    if (this.itemOpenedInternally) {
+      // Same pattern as a real "back" tap — returns to whatever URL was open before the modal.
+      this.location.back();
+    } else {
+      // Arrived here via a direct link/shared URL with no in-app history to go back to.
+      this.activeItemSlug.set(null);
+      const scenePath = SCENES.find((s) => s.id === this.activeSceneId())?.path ?? '/';
+      this.location.go(scenePath);
+      this.applySeo(this.activeSceneId());
+    }
+  }
+
   toggleMap(): void {
     this.isMapOpen.update((v) => !v);
   }
@@ -160,5 +259,10 @@ export class SceneService {
     if (seo) {
       this.seo.apply(seo);
     }
+  }
+
+  private toSceneSeo(entry: ItemSeoEntry): SceneSeo {
+    const { path, title, description, image } = entry;
+    return { path, title, description, image };
   }
 }

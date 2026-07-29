@@ -11,9 +11,24 @@
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://atrollpath.com/treasure-room/dragon-egg-paint-kit</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://atrollpath.com/treasure-room/elemental-avatar-lantern</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://atrollpath.com/the-makers-tower</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://atrollpath.com/the-makers-tower/memorial-lantern</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://atrollpath.com/friends-of-the-troll</loc>
