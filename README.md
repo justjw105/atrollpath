@@ -7,17 +7,26 @@ A point-and-click, video-game-style landing page for the ATrollPath Etsy shop (T
 This isn't a scrolling website — it's a small point-and-click adventure:
 
 - **Scenes, not sections.** Only one full-screen scene is ever on stage at a time: **Cave Entrance → Treasure Room → Friends of the Troll → The Maker's Tower → Troll Cave Exit**. Navigation is a `SceneService` signal (`core/services/scene.service.ts`), not scroll position.
+- **Real per-scene URLs.** Each scene also has a real, crawlable, shareable URL (`/`, `/treasure-room`, `/friends-of-the-troll`, `/the-makers-tower`, `/troll-cave`) — see the SEO section below.
 - **Hotspots.** Every place you can travel to is a glowing, pulsing hotspot drawn directly on the scene artwork (`shared/hotspot/`) — click a hotspot to go there, exactly like a classic point-and-click adventure game. Off-screen hotspots get a directional edge-arrow marker (`shared/edge-arrow/`) so you always know which way to look.
 - **Iris-wipe transitions.** Traveling between scenes plays an old-game circle-close/circle-open transition (`shared/scene-transition/`) with a torch-flicker loading beat and a whoosh + chime sound effect.
 - **Quest Map overlay.** The HUD's map button (`shared/game-hud/`) opens a full map overlay (`shared/quest-map-overlay/`) so you can jump to any scene directly, like a game's pause-menu map.
 - **Inspect-item panels.** Clicking a product or commission opens an inventory-style "item found" panel (`shared/item-inspect/`) with a multi-photo gallery (prev/next + dots) instead of a plain lightbox.
 - **Sound.** Soft hover ticks, a travel chime, and a scene-transition whoosh, togglable from the HUD and persisted to `localStorage` (`core/services/sfx.service.ts`).
-- **Intro splash.** A "Click to Begin Your Quest" screen unlocks audio playback (browsers block autoplay before a user gesture) and sets the tone immediately.
+- **Intro splash.** A "Click to Begin Your Quest" screen unlocks audio playback (browsers block autoplay before a user gesture) and sets the tone immediately — it's a visual overlay only, so the actual page content is always present underneath for both users and search engines.
+
+## SEO
+
+- **Real URLs per scene**, defined in `app.routes.ts` and `SCENES` in `core/services/scene.service.ts`. Clicking a hotspot updates the URL via Angular's `Location` service (no page reload, transition animation stays intact); browser back/forward also works correctly.
+- **Per-scene title, meta description, canonical link, and Open Graph / Twitter Card tags**, applied by `core/services/seo.service.ts` and defined per scene in `SCENE_SEO` (`scene.service.ts`). Edit the copy there to change what search engines and social-media link previews show for each scene.
+- **Organization structured data** (JSON-LD) is in `src/index.html`, site-wide.
+- **`public/robots.txt`** and **`public/sitemap.xml`** list all 5 real URLs — update `sitemap.xml` if you add or rename a scene, and resubmit it in Google Search Console.
+- **Images are WebP**, not PNG — illustrations went from ~4-5MB each to ~450-550KB with no visible quality loss, which matters for page-speed ranking. Keep new scene backgrounds in WebP too (`convert file.png -quality 82 file.webp`).
 
 ## Growth points
 
 - **Add a product or commission**: edit `src/app/core/data/products.data.ts` (`FEATURED_PRODUCTS`, `COMMISSIONS`, `FRIEND_SHOPS`). Add an optional `images: string[]` array to give any item its own photo gallery. No other file changes.
-- **Add a new scene**: add an entry to `SCENES` in `core/services/scene.service.ts`, create a component under `features/home/<scene-name>/`, add a `@case` in `home.component.html`, and add a hotspot somewhere that leads to it.
+- **Add a new scene**: add an entry to `SCENES` **and** `SCENE_SEO` in `core/services/scene.service.ts`, add a matching route in `app.routes.ts`, create a component under `features/home/<scene-name>/`, add a `@case` in `home.component.html`, and add a hotspot somewhere that leads to it.
 
 ## ⚠️ Image & audio assets (required before first run)
 
@@ -27,8 +36,8 @@ they were generated/uploaded in a chat session and are provided as a one-time
 download instead of bloating the repo history.
 
 1. Download the asset bundle (link shared with you in the Magica chat that built this project).
-2. Unzip it into `public/assets/` so the folder structure matches what's referenced in `products.data.ts` and the scene components (`public/assets/img/`, `public/assets/products/`, `public/assets/commissions/`, `public/assets/sfx/`).
-3. From then on, treat `public/assets/` like any other tracked folder — add new photos there and reference them in `products.data.ts`. New scene backgrounds go in `public/assets/img/`.
+2. Unzip it into `public/` so the folder structure matches what's referenced in `products.data.ts` and the scene components (`public/assets/img/`, `public/assets/products/`, `public/assets/commissions/`, `public/assets/sfx/`, plus `public/robots.txt` and `public/sitemap.xml`).
+3. From then on, treat `public/assets/` like any other tracked folder — add new photos there and reference them in `products.data.ts`. New scene backgrounds go in `public/assets/img/` (as WebP, see SEO section above).
 
 If you'd rather version assets in git going forward, just `git add public/assets` and commit — nothing in `.gitignore` excludes it; they were simply left out of the initial automated push.
 
@@ -62,7 +71,7 @@ npm install -g firebase-tools   # if you don't have it yet
 git clone https://github.com/justjw105/atrollpath.git
 cd atrollpath
 npm install
-# unzip the asset bundle into public/assets/ first (see above) — the build needs it
+# unzip the asset bundle into public/ first (see above) — the build needs it
 npm run build
 firebase login                  # opens a browser to sign in, once
 firebase deploy --only hosting
@@ -81,7 +90,7 @@ This repo is the single source of truth. On each machine:
 git clone https://github.com/justjw105/atrollpath.git
 cd atrollpath
 npm install
-# then unzip the asset bundle into public/assets/ (see above)
+# then unzip the asset bundle into public/ (see above)
 npm start
 ```
 
