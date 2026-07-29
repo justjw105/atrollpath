@@ -1,6 +1,6 @@
 <section class="scene scene--hero" appEdgeScroll (scroll)="onScroll($event)">
   <div class="map-canvas" #canvas>
-    <img class="scene__bg" src="assets/img/hero-map.png" alt="A fantasy map showing the troll's cave, a workshop tower, and a rocky cave entrance connected by a winding path" >
+    <img class="scene__bg" src="assets/img/hero-map.webp" alt="A fantasy map showing the troll's cave, a workshop tower, and a rocky cave entrance connected by a winding path" >
 
     @for (h of hotspots; track h.id) {
       <app-hotspot [x]="h.x" [y]="h.y" [icon]="h.icon" [label]="h.label" (activate)="go(h.target)" />

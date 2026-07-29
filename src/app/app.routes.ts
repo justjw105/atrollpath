@@ -2,12 +2,20 @@ import { Routes } from '@angular/router';
 import { HomeComponent } from './features/home/home.component';
 
 /**
- * GROWTH POINT: the site is one route today (the landing page). When you're
- * ready to add standalone pages (a full shop, a full gallery, an about page),
- * add them here, e.g.:
- *   { path: 'shop', loadComponent: () => import('./features/shop/shop.component').then(m => m.ShopComponent) }
- * Lazy-loading via loadComponent keeps the initial bundle small as the site grows.
+ * Each "scene" gets a real, crawlable, shareable URL (matching SCENES in
+ * core/services/scene.service.ts) even though all of them render through
+ * the same HomeComponent — SceneService reads the route's `sceneId` data
+ * on first load and sets the initial scene before anything paints.
+ *
+ * GROWTH POINT: adding a new scene = one entry here (path + sceneId
+ * matching a SCENES entry) + the usual scene-service/home-component wiring
+ * described there.
  */
 export const routes: Routes = [
-  { path: '', component: HomeComponent }
+  { path: '', component: HomeComponent, data: { sceneId: 'hero' } },
+  { path: 'treasure-room', component: HomeComponent, data: { sceneId: 'featured' } },
+  { path: 'friends-of-the-troll', component: HomeComponent, data: { sceneId: 'friends' } },
+  { path: 'the-makers-tower', component: HomeComponent, data: { sceneId: 'gallery' } },
+  { path: 'troll-cave', component: HomeComponent, data: { sceneId: 'visit' } },
+  { path: '**', redirectTo: '' }
 ];

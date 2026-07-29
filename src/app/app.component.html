@@ -1,12 +1,12 @@
+<app-game-hud />
+<app-quest-map-overlay />
+
+<main class="game-stage">
+  <router-outlet />
+</main>
+
 @if (!started()) {
   <app-intro-splash (begin)="beginQuest()" />
-} @else {
-  <app-game-hud />
-  <app-quest-map-overlay />
-
-  <main class="game-stage">
-    <router-outlet />
-  </main>
 }
 
 <app-scene-transition />
