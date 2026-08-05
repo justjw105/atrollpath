@@ -7,7 +7,7 @@ A point-and-click, video-game-style landing page for the ATrollPath Etsy shop (T
 This isn't a scrolling website — it's a small point-and-click adventure:
 
 - **Scenes, not sections.** Only one full-screen scene is ever on stage at a time: **Cave Entrance → Treasure Room → Friends of the Troll → The Maker's Tower → Troll Cave Exit**. Navigation is a `SceneService` signal (`core/services/scene.service.ts`), not scroll position.
-- **Real per-scene URLs.** Each scene also has a real, crawlable, shareable URL (`/`, `/treasure-room`, `/friends-of-the-troll`, `/the-makers-tower`, `/troll-cave`) — see the SEO section below.
+- **Real per-scene URLs.** Each scene also has a real, crawlable, shareable URL (`/`, `/treasure-room`, `/friends-of-the-troll`, `/the-makers-tower`, `/troll-cave`) — see the SEO section below. Every product/commission also gets its own URL (e.g. `/treasure-room/dragon-egg-paint-kit`) that opens the same inspect modal.
 - **Hotspots.** Every place you can travel to is a glowing, pulsing hotspot drawn directly on the scene artwork (`shared/hotspot/`) — click a hotspot to go there, exactly like a classic point-and-click adventure game. Off-screen hotspots get a directional edge-arrow marker (`shared/edge-arrow/`) so you always know which way to look.
 - **Iris-wipe transitions.** Traveling between scenes plays an old-game circle-close/circle-open transition (`shared/scene-transition/`) with a torch-flicker loading beat and a whoosh + chime sound effect.
 - **Quest Map overlay.** The HUD's map button (`shared/game-hud/`) opens a full map overlay (`shared/quest-map-overlay/`) so you can jump to any scene directly, like a game's pause-menu map.
@@ -18,14 +18,30 @@ This isn't a scrolling website — it's a small point-and-click adventure:
 ## SEO
 
 - **Real URLs per scene**, defined in `app.routes.ts` and `SCENES` in `core/services/scene.service.ts`. Clicking a hotspot updates the URL via Angular's `Location` service (no page reload, transition animation stays intact); browser back/forward also works correctly.
-- **Per-scene title, meta description, canonical link, and Open Graph / Twitter Card tags**, applied by `core/services/seo.service.ts` and defined per scene in `SCENE_SEO` (`scene.service.ts`). Edit the copy there to change what search engines and social-media link previews show for each scene.
+- **Real URLs per product/commission too** (`ITEM_SEO` in `scene.service.ts`, auto-derived from `products.data.ts` — nothing to maintain by hand). Closing the modal via the ✕ button uses `history.back()` if it was opened by a click, or navigates to the parent scene if arrived at directly (so a shared link never accidentally sends someone away from the site).
+- **Per-scene/per-item title, meta description, canonical link, and Open Graph / Twitter Card tags**, applied by `core/services/seo.service.ts`. Edit the copy in `SCENE_SEO` (`scene.service.ts`) to change what search engines and social-media link previews show for each scene.
 - **Organization structured data** (JSON-LD) is in `src/index.html`, site-wide.
-- **`public/robots.txt`** and **`public/sitemap.xml`** list all 5 real URLs — update `sitemap.xml` if you add or rename a scene, and resubmit it in Google Search Console.
+- **`public/robots.txt`** and **`public/sitemap.xml`** list every real URL — update `sitemap.xml` if you add/rename a scene or product, and resubmit it in Google Search Console (Indexing > Sitemaps, just enter `sitemap.xml`).
 - **Images are WebP**, not PNG — illustrations went from ~4-5MB each to ~450-550KB with no visible quality loss, which matters for page-speed ranking. Keep new scene backgrounds in WebP too (`convert file.png -quality 82 file.webp`).
+
+## Analytics (Google Analytics 4)
+
+The app is wired for GA4 but ships with a placeholder Measurement ID, so it's a no-op until you add your own:
+
+1. Create a GA4 property at [analytics.google.com](https://analytics.google.com) (Admin > Create Property > Web stream for `atrollpath.com`) and copy its Measurement ID (`G-XXXXXXXXXX`).
+2. In `src/index.html`, replace **both** occurrences of `G-XXXXXXXXXX` with your real ID.
+3. Rebuild and redeploy as usual.
+
+What's tracked automatically once the ID is in:
+- A `page_view` for every scene AND every product/commission modal (each has its own path/title) — fired from `core/services/seo.service.ts`, so it's always in sync with what's SEO-visible.
+- A `etsy_click` event, labeled with exactly where the click happened (e.g. `"Dragon Egg Paint Kit"`, `"Memorial Lantern"`, `"Troll Cave Exit CTA"`), whenever someone clicks through to your Etsy shop — from `core/services/analytics.service.ts`. In GA4, look under Reports > Engagement > Events > `etsy_click`, or build an Explore report broken down by the `event_label` parameter to compare which products/pages drive the most Etsy clicks.
+- GA4's own "Enhanced measurement" (on by default for new properties) also auto-tracks generic outbound clicks as a safety net, independent of the app's own tracking.
+
+GROWTH POINT: to track clicks on something new (e.g. the Friends of the Troll external links), inject `AnalyticsService` and call `trackEtsyClick(...)` or add a new method following the same pattern.
 
 ## Growth points
 
-- **Add a product or commission**: edit `src/app/core/data/products.data.ts` (`FEATURED_PRODUCTS`, `COMMISSIONS`, `FRIEND_SHOPS`). Add an optional `images: string[]` array to give any item its own photo gallery. No other file changes.
+- **Add a product or commission**: edit `src/app/core/data/products.data.ts` (`FEATURED_PRODUCTS`, `COMMISSIONS`, `FRIEND_SHOPS`). Add an optional `images: string[]` array to give any item its own photo gallery. No other file changes — it automatically gets its own SEO'd URL and click tracking too.
 - **Add a new scene**: add an entry to `SCENES` **and** `SCENE_SEO` in `core/services/scene.service.ts`, add a matching route in `app.routes.ts`, create a component under `features/home/<scene-name>/`, add a `@case` in `home.component.html`, and add a hotspot somewhere that leads to it.
 
 ## ⚠️ Image & audio assets (required before first run)
