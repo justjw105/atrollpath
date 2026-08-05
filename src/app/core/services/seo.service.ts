@@ -1,6 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { Injectable, inject } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
+import { AnalyticsService } from './analytics.service';
 
 export interface SceneSeo {
   title: string;
@@ -18,7 +19,9 @@ const DEFAULT_OG_IMAGE = '/assets/img/hero-map.webp';
  * Keeps <title>, meta description, canonical link, and Open Graph / Twitter
  * Card tags in sync with whichever scene is active — so every scene has its
  * own real, distinct, shareable SEO identity even though navigation between
- * them never triggers a full page reload.
+ * them never triggers a full page reload. Also fires a GA4 virtual page_view
+ * for the same change, since this is the single choke point every scene AND
+ * item-modal change already passes through.
  *
  * GROWTH POINT: add a scene's SEO copy alongside its SCENES entry in
  * scene.service.ts (see SCENE_SEO there) — this service just applies
@@ -29,6 +32,7 @@ export class SeoService {
   private readonly title = inject(Title);
   private readonly meta = inject(Meta);
   private readonly document = inject(DOCUMENT);
+  private readonly analytics = inject(AnalyticsService);
 
   apply(seo: SceneSeo): void {
     const url = `${SITE_URL}${seo.path}`;
@@ -48,6 +52,8 @@ export class SeoService {
     this.setMeta('twitter:image', image);
 
     this.setCanonical(url);
+
+    this.analytics.trackPageView(seo.path, seo.title);
   }
 
   /** Injects or replaces a JSON-LD structured-data block identified by `id`. Pass `data: null` to remove it. */

@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject, signal } from '@angular/core';
+import { AnalyticsService } from '../../core/services/analytics.service';
 
 export interface InspectableItem {
   /** One or more photos of the item. The gallery only shows nav controls when there's more than one. */
@@ -24,6 +25,7 @@ export interface InspectableItem {
   styleUrl: './item-inspect.component.scss'
 })
 export class ItemInspectComponent {
+  private readonly analytics = inject(AnalyticsService);
   private _item: InspectableItem | null = null;
 
   readonly activeIndex = signal(0);
@@ -60,5 +62,11 @@ export class ItemInspectComponent {
   selectIndex(i: number, event?: Event): void {
     event?.stopPropagation();
     this.activeIndex.set(i);
+  }
+
+  trackCtaClick(): void {
+    if (this._item?.ctaUrl?.includes('etsy.com')) {
+      this.analytics.trackEtsyClick(this._item.title);
+    }
   }
 }

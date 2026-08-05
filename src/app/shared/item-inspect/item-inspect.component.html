@@ -35,7 +35,7 @@
           <p class="inspect__desc">{{ item.description }}</p>
         }
         @if (item.ctaUrl) {
-          <a class="btn-quest" [href]="item.ctaUrl" target="_blank" rel="noopener">
+          <a class="btn-quest" [href]="item.ctaUrl" target="_blank" rel="noopener" (click)="trackCtaClick()">
             {{ item.ctaLabel || 'View in the Troll Cave →' }}
           </a>
         }

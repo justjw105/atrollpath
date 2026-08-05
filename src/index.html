@@ -11,7 +11,7 @@
   <link rel="icon" type="image/png" href="assets/img/logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@500;600;700&family=EB+Garamond:ital,wght@0,500;0,600;0,600;1,400&display=swap" rel="stylesheet">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -27,6 +27,23 @@
       "https://www.pinterest.com/justjw105"
     ]
   }
+  </script>
+
+  <!--
+    GOOGLE ANALYTICS (GA4)
+    Replace BOTH "G-XXXXXXXXXX" below with your real Measurement ID from
+    analytics.google.com (Admin > Data Streams > your web stream).
+    send_page_view is off because the app fires its own page_view for every
+    scene/item-modal change (see core/services/seo.service.ts) — leaving the
+    default on would double-count and mis-time the very first page view.
+  -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { window.dataLayer.push(arguments); }
+    window.gtag = gtag;
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX', { send_page_view: false });
   </script>
 </head>
 <body>
