@@ -30,20 +30,18 @@
   </script>
 
   <!--
-    GOOGLE ANALYTICS (GA4)
-    Replace BOTH "G-XXXXXXXXXX" below with your real Measurement ID from
-    analytics.google.com (Admin > Data Streams > your web stream).
+    GOOGLE ANALYTICS (GA4) — Measurement ID: G-E707TGQYL4
     send_page_view is off because the app fires its own page_view for every
     scene/item-modal change (see core/services/seo.service.ts) — leaving the
     default on would double-count and mis-time the very first page view.
   -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-E707TGQYL4"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag() { window.dataLayer.push(arguments); }
     window.gtag = gtag;
     gtag('js', new Date());
-    gtag('config', 'G-XXXXXXXXXX', { send_page_view: false });
+    gtag('config', 'G-E707TGQYL4', { send_page_view: false });
   </script>
 </head>
 <body>
