@@ -13,7 +13,7 @@ export interface SceneSeo {
 }
 
 const SITE_URL = 'https://atrollpath.com';
-const DEFAULT_OG_IMAGE = '/assets/img/hero-map.webp';
+const DEFAULT_OG_IMAGE = '/assets/img/hero-panorama.webp';
 
 /**
  * Keeps <title>, meta description, canonical link, and Open Graph / Twitter
