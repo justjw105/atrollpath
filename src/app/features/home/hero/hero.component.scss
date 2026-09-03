@@ -6,37 +6,37 @@
   overflow-y: hidden;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  display: flex;
-  align-items: stretch;
-  /* Center the map when it fits, but if it overflows, "safe" alignment
-     falls back to start-aligned so every part of the image stays reachable
-     by scrolling. Plain `center` (without `safe`) mathematically centers
-     overflow off both edges, which leaves the left portion permanently
-     unreachable since scrollLeft can't go negative — that was the bug. */
-  justify-content: center;
-  justify-content: safe center;
 
   &::-webkit-scrollbar {
     display: none;
   }
 }
 
-/* Sized to the image's own intrinsic aspect ratio at full viewport height —
-   never cropped, so hotspot percentages always land on the right pixels.
-   If it's wider than the viewport (narrow/short screens), the .scene
-   container scrolls horizontally instead of squashing or cropping it. */
-.map-canvas {
+.map-track {
   position: relative;
   height: 100%;
-  flex: 0 0 auto;
-  display: inline-block;
 }
 
-.scene__bg {
+.map-copy {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+.map-copy__img {
   height: 100%;
   width: auto;
   max-width: none;
   display: block;
+}
+
+/* The mirror-tile trick: flipping alternating copies guarantees the pixel
+   column at every copy boundary matches exactly on both sides — a
+   mathematically perfect seam with zero blending, which is what makes the
+   360° loop possible without a hand-tileable source image. */
+.map-copy__img--mirrored {
+  transform: scaleX(-1);
 }
 
 .scene__scrim {

@@ -1,9 +1,24 @@
-<section class="scene scene--hero" appEdgeScroll (scroll)="onScroll($event)">
-  <div class="map-canvas" #canvas>
-    <img class="scene__bg" src="assets/img/hero-map.webp" alt="A fantasy map showing the troll's cave, a workshop tower, and a rocky cave entrance connected by a winding path" >
+<section class="scene scene--hero" appEdgeScroll #stage (scroll)="onScroll($event)">
+  <div class="map-track" [style.width.px]="trackWidth()">
+    @for (copy of copies; track copy.index) {
+      <div
+        class="map-copy"
+        [style.left.px]="copyOffset(copy.index)"
+        [style.width.px]="trackWidth() / copies.length"
+      >
+        <img
+          class="map-copy__img"
+          [class.map-copy__img--mirrored]="copy.kind === 'B'"
+          src="assets/img/hero-panorama.webp"
+          alt="A fantasy panorama map of the winding path, the troll's cave, a signpost crossroads, a workshop tower, and a rocky cave entrance"
+        >
 
-    @for (h of hotspots; track h.id) {
-      <app-hotspot [x]="h.x" [y]="h.y" [icon]="h.icon" [label]="h.label" (activate)="go(h.target)" />
+        @if (isRealCopy(copy.kind)) {
+          @for (h of hotspots; track h.id) {
+            <app-hotspot [x]="h.x" [y]="h.y" [icon]="h.icon" [label]="h.label" (activate)="go(h.target)" />
+          }
+        }
+      </div>
     }
   </div>
 
@@ -15,7 +30,7 @@
 
   <div class="scene__intro">
     <p class="eyebrow">A quest begins at the Troll Cave</p>
-    <h1 class="scene__title">Whimsical etched glass,<br>forged by firelight.</h1>
-    <p class="scene__subtitle">Click a landmark on the map to explore. Hover the edge of the screen to look further along the path.</p>
+    <h1 class="scene__title">Whimsical fused glass,<br>forged by firelight.</h1>
+    <p class="scene__subtitle">Click a landmark to explore, or keep panning in either direction — the path loops all the way around.</p>
   </div>
 </section>

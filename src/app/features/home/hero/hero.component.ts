@@ -13,7 +13,28 @@ interface MapHotspot {
   target: string;
 }
 
-const EDGE_MARGIN_PX = 90;
+/**
+ * True aspect ratio of hero-panorama.webp (3456 / 1152). Kept as an exact
+ * constant so the copy width can be computed analytically from the
+ * viewport height alone — no waiting on image load / ResizeObserver.
+ */
+const IMAGE_ASPECT = 3;
+
+/**
+ * Full 360° panning without ever needing a pixel-perfect seam in the
+ * source art: alternate the SAME image normal / mirrored (scaleX(-1)).
+ * At every boundary between a normal and a mirrored copy, both sides show
+ * the exact same source column, so the seam is mathematically exact — no
+ * blending, no ghosting. The pattern repeats every 2 copies (one normal +
+ * one mirrored), so jumping the scroll position by exactly that period is
+ * always visually identical, which is how the "infinite" wrap is faked
+ * with a finite strip of DOM: render 5 copies (B,A,B,A,B), keep the
+ * visible position recentered within the middle band, and silently jump
+ * by ±2 copies whenever it drifts too close to either physical edge.
+ */
+type CopyKind = 'A' | 'B';
+const COPY_PATTERN: CopyKind[] = ['B', 'A', 'B', 'A', 'B'];
+const RECENTER_JUMP_COPIES = 2;
 
 @Component({
   selector: 'app-hero',
@@ -25,44 +46,70 @@ const EDGE_MARGIN_PX = 90;
 export class HeroComponent implements AfterViewInit, OnDestroy {
   readonly scene = inject(SceneService);
 
-  @ViewChild('canvas') private canvasRef!: ElementRef<HTMLElement>;
+  @ViewChild('stage') private stageRef!: ElementRef<HTMLElement>;
 
   /**
-   * GROWTH POINT: this is the single source of truth for hero-map hotspots.
-   * Add a landmark here (matching a spot painted into hero-map.png) and both
-   * the on-screen hotspot AND its off-screen quest-marker arrow are wired
-   * up automatically — no template changes needed.
+   * GROWTH POINT: single source of truth for landmarks painted into
+   * hero-panorama.webp. Add a landmark here and it appears as a clickable
+   * hotspot (with automatic off-screen quest-marker arrows) — no template
+   * changes needed. x/y are percentages within ONE copy of the image.
+   * Keep this in sync with the SCENES x/y in core/services/scene.service.ts
+   * (those drive the Quest Map overlay, which shows the same artwork).
    */
   readonly hotspots: MapHotspot[] = [
-    { id: 'treasure', x: 20, y: 58, icon: 'door', label: 'Enter the Treasure Room', target: 'featured' },
-    { id: 'workbench', x: 57, y: 32, icon: 'sign', label: "Enter the Maker's Tower", target: 'gallery' },
-    { id: 'exit', x: 87, y: 60, icon: 'exit', label: 'Step into the Troll Cave (Etsy)', target: 'visit' },
-    { id: 'friends', x: 42, y: 49, icon: 'sign', label: 'Friends of the Troll', target: 'friends' }
+    { id: 'treasure', x: 23, y: 55, icon: 'door', label: 'Enter the Treasure Room', target: 'featured' },
+    { id: 'signpost', x: 35, y: 53, icon: 'sign', label: 'Meet Friends of the Troll', target: 'friends' },
+    { id: 'workbench', x: 63, y: 30, icon: 'sign', label: "Enter the Maker's Tower", target: 'gallery' },
+    { id: 'exit', x: 82, y: 53, icon: 'exit', label: 'Step into the Troll Cave (Etsy)', target: 'visit' }
   ];
 
+  readonly copies = COPY_PATTERN.map((kind, index) => ({ kind, index }));
+
   private readonly scrollLeft = signal(0);
-  private readonly canvasWidth = signal(0);
+  private readonly copyWidth = signal(typeof window !== 'undefined' ? window.innerHeight * IMAGE_ASPECT : 2400);
   private readonly viewportWidth = signal(typeof window !== 'undefined' ? window.innerWidth : 1200);
 
-  private resizeObserver?: ResizeObserver;
+  /** Screen x-offset (in px) of the left edge of a given copy index. */
+  copyOffset(index: number): number {
+    return index * this.copyWidth();
+  }
 
-  /** Hotspots currently scrolled out of view, with the screen edge + vertical position for their arrow marker. */
+  trackWidth(): number {
+    return COPY_PATTERN.length * this.copyWidth();
+  }
+
+  /** Only the un-mirrored ("A") copies get real, clickable hotspots. */
+  isRealCopy(kind: CopyKind): boolean {
+    return kind === 'A';
+  }
+
+  /** Hotspots currently off-screen, with the nearer of their two "A"-copy instances used for direction + position. */
   readonly offscreenMarkers = computed(() => {
-    const canvasW = this.canvasWidth();
-    if (!canvasW) return [];
-
+    const w = this.copyWidth();
     const viewportW = this.viewportWidth();
     const scrolled = this.scrollLeft();
+    const EDGE_MARGIN_PX = 90;
+
+    const realCopyIndices = this.copies.filter((c) => c.kind === 'A').map((c) => c.index);
 
     return this.hotspots
       .map((h) => {
-        const xPx = canvasW * (h.x / 100);
-        const screenX = xPx - scrolled;
+        let best: { screenX: number } | null = null;
 
-        if (screenX < EDGE_MARGIN_PX) {
+        for (const idx of realCopyIndices) {
+          const xPx = idx * w + w * (h.x / 100);
+          const screenX = xPx - scrolled;
+          if (best === null || Math.abs(screenX) < Math.abs(best.screenX)) {
+            best = { screenX };
+          }
+        }
+
+        if (!best) return null;
+
+        if (best.screenX < EDGE_MARGIN_PX) {
           return { ...h, side: 'left' as const };
         }
-        if (screenX > viewportW - EDGE_MARGIN_PX) {
+        if (best.screenX > viewportW - EDGE_MARGIN_PX) {
           return { ...h, side: 'right' as const };
         }
         return null;
@@ -75,32 +122,44 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
   }
 
   onScroll(event: Event): void {
-    this.scrollLeft.set((event.target as HTMLElement).scrollLeft);
+    const el = event.target as HTMLElement;
+    this.recenterIfNeeded(el);
+    this.scrollLeft.set(el.scrollLeft);
   }
 
   ngAfterViewInit(): void {
-    this.syncCanvasWidth();
-
-    if (typeof ResizeObserver !== 'undefined' && this.canvasRef) {
-      this.resizeObserver = new ResizeObserver(() => this.syncCanvasWidth());
-      this.resizeObserver.observe(this.canvasRef.nativeElement);
-    }
+    const el = this.stageRef.nativeElement;
+    // Start inside the first real ("A") copy so the opening framing matches
+    // before this feature existed, with a full copy of buffer on either side.
+    el.scrollLeft = this.copyWidth();
+    this.scrollLeft.set(el.scrollLeft);
 
     window.addEventListener('resize', this.onWindowResize);
   }
 
   ngOnDestroy(): void {
-    this.resizeObserver?.disconnect();
     window.removeEventListener('resize', this.onWindowResize);
   }
 
   private onWindowResize = (): void => {
+    this.copyWidth.set(window.innerHeight * IMAGE_ASPECT);
     this.viewportWidth.set(window.innerWidth);
+    if (this.stageRef) {
+      this.scrollLeft.set(this.stageRef.nativeElement.scrollLeft);
+    }
   };
 
-  private syncCanvasWidth(): void {
-    if (this.canvasRef) {
-      this.canvasWidth.set(this.canvasRef.nativeElement.clientWidth);
+  /** Silently jump by exactly one full (normal+mirror) period when drifting near either physical edge of the rendered strip. */
+  private recenterIfNeeded(el: HTMLElement): void {
+    const w = this.copyWidth();
+    const jump = RECENTER_JUMP_COPIES * w;
+    const low = 0.5 * w;
+    const high = this.trackWidth() - el.clientWidth - 0.5 * w;
+
+    if (el.scrollLeft < low) {
+      el.scrollLeft += jump;
+    } else if (el.scrollLeft > high) {
+      el.scrollLeft -= jump;
     }
   }
 }
