@@ -23,6 +23,8 @@ export interface SecretDef {
    * pure discovery reward.
    */
   variant?: 'hidden' | 'ambient';
+  /** 'md' (default) or 'lg' for a noticeably bigger icon + glow. */
+  size?: 'md' | 'lg';
 }
 
 /**
@@ -65,7 +67,8 @@ export const SECRETS: SecretDef[] = [
     sceneId: 'gallery',
     x: 6,
     y: 16,
-    icon: '🐈',
+    icon: '🐱',
+    size: 'lg',
     title: 'The Workshop Cat',
     message:
       "Shh — don't wake her. She's curled up by the kiln, dreaming of yarn and stray glass shimmer. She approves of your work, quietly."
