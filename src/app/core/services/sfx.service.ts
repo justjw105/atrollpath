@@ -1,20 +1,23 @@
 import { Injectable, signal } from '@angular/core';
 
-type SfxName = 'chime' | 'tick' | 'whoosh';
+type SfxName = 'chime' | 'tick' | 'whoosh' | 'sparkle' | 'pop';
 
 const SOURCES: Record<SfxName, string> = {
   chime: 'assets/sfx/chime.mp3',
   tick: 'assets/sfx/tick.mp3',
-  whoosh: 'assets/sfx/whoosh.mp3'
+  whoosh: 'assets/sfx/whoosh.mp3',
+  sparkle: 'assets/sfx/sparkle.mp3',
+  pop: 'assets/sfx/pop.mp3'
 };
 
 const STORAGE_KEY = 'atrollpath.sfx.enabled';
 
 /**
  * Tiny sound-effect player for game-feel feedback (hotspot hover ticks,
- * scene-travel chime/whoosh). Respects a mute toggle persisted to
- * localStorage and only actually unlocks playback after a user gesture
- * (browsers block autoplay before that).
+ * scene-travel chime/whoosh, secret-found sparkle, mini-game catch pop).
+ * Respects a mute toggle persisted to localStorage and only actually
+ * unlocks playback after a user gesture (browsers block autoplay before
+ * that).
  */
 @Injectable({ providedIn: 'root' })
 export class SfxService {
@@ -45,7 +48,7 @@ export class SfxService {
     this.unlocked = true;
     for (const name of Object.keys(SOURCES) as SfxName[]) {
       const audio = new Audio(SOURCES[name]);
-      audio.volume = name === 'tick' ? 0.35 : 0.5;
+      audio.volume = name === 'tick' || name === 'pop' ? 0.35 : 0.5;
       audio.preload = 'auto';
       this.pool[name] = audio;
     }
