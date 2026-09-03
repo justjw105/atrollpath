@@ -8,9 +8,10 @@
       >
         <img
           class="map-copy__img"
-          [class.map-copy__img--mirrored]="copy.kind === 'B'"
-          src="assets/img/hero-panorama.webp"
-          alt="A fantasy panorama map of the winding path, the troll's cave, a signpost crossroads, a workshop tower, and a rocky cave entrance"
+          [src]="copy.image"
+          [alt]="isRealCopy(copy.kind)
+            ? 'A fantasy map of the winding path, the troll\'s cave, a signpost crossroads, a workshop tower, and a rocky cave entrance'
+            : 'A misty stretch of enchanted forest with a waterfall, glowing standing stones, and an old stone bridge'"
         >
 
         @if (isRealCopy(copy.kind)) {

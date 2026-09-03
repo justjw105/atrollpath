@@ -31,14 +31,6 @@
   display: block;
 }
 
-/* The mirror-tile trick: flipping alternating copies guarantees the pixel
-   column at every copy boundary matches exactly on both sides — a
-   mathematically perfect seam with zero blending, which is what makes the
-   360° loop possible without a hand-tileable source image. */
-.map-copy__img--mirrored {
-  transform: scaleX(-1);
-}
-
 .scene__scrim {
   position: fixed;
   inset: 0;

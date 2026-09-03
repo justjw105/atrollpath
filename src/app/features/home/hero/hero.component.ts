@@ -14,27 +14,36 @@ interface MapHotspot {
 }
 
 /**
- * True aspect ratio of hero-panorama.webp (3456 / 1152). Kept as an exact
- * constant so the copy width can be computed analytically from the
+ * True aspect ratio of both hero-panorama*.webp files (3456 / 1152). Kept as
+ * an exact constant so the copy width can be computed analytically from the
  * viewport height alone — no waiting on image load / ResizeObserver.
  */
 const IMAGE_ASPECT = 3;
 
 /**
- * Full 360° panning without ever needing a pixel-perfect seam in the
- * source art: alternate the SAME image normal / mirrored (scaleX(-1)).
- * At every boundary between a normal and a mirrored copy, both sides show
- * the exact same source column, so the seam is mathematically exact — no
- * blending, no ghosting. The pattern repeats every 2 copies (one normal +
- * one mirrored), so jumping the scroll position by exactly that period is
- * always visually identical, which is how the "infinite" wrap is faked
- * with a finite strip of DOM: render 5 copies (B,A,B,A,B), keep the
- * visible position recentered within the middle band, and silently jump
- * by ±2 copies whenever it drifts too close to either physical edge.
+ * Full 360° panning around a loop made of TWO distinct panoramas instead of
+ * one image mirrored against itself — the mirror trick gave a mathematically
+ * perfect seam, but it meant panning "the other way around" showed the exact
+ * same landmarks flipped, with no hotspots, which read as an empty repeat.
+ * hero-panorama.webp ("A", the real destinations) and hero-panorama-b.webp
+ * ("B", an atmospheric detour — waterfall, standing stones, a mossy bridge,
+ * no hotspots) were both generated with matching dense-forest bookends on
+ * their left/right edges, so A→B and B→A transitions read as a continuous
+ * walk rather than a hard cut. The pattern repeats every 2 copies (one A +
+ * one B), so jumping the scroll position by exactly that period is always
+ * visually identical, which is how the "infinite" wrap is faked with a
+ * finite strip of DOM: render 5 copies (B,A,B,A,B), keep the visible
+ * position recentered within the middle band, and silently jump by ±2
+ * copies whenever it drifts too close to either physical edge.
  */
 type CopyKind = 'A' | 'B';
 const COPY_PATTERN: CopyKind[] = ['B', 'A', 'B', 'A', 'B'];
 const RECENTER_JUMP_COPIES = 2;
+
+const COPY_IMAGE: Record<CopyKind, string> = {
+  A: 'assets/img/hero-panorama.webp',
+  B: 'assets/img/hero-panorama-b.webp'
+};
 
 @Component({
   selector: 'app-hero',
@@ -50,11 +59,12 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
 
   /**
    * GROWTH POINT: single source of truth for landmarks painted into
-   * hero-panorama.webp. Add a landmark here and it appears as a clickable
-   * hotspot (with automatic off-screen quest-marker arrows) — no template
-   * changes needed. x/y are percentages within ONE copy of the image.
-   * Keep this in sync with the SCENES x/y in core/services/scene.service.ts
-   * (those drive the Quest Map overlay, which shows the same artwork).
+   * hero-panorama.webp (the "A" copies). Add a landmark here and it appears
+   * as a clickable hotspot (with automatic off-screen quest-marker arrows)
+   * — no template changes needed. x/y are percentages within ONE copy of
+   * the image. Keep this in sync with the SCENES x/y in
+   * core/services/scene.service.ts (those drive the Quest Map overlay,
+   * which shows the same artwork).
    */
   readonly hotspots: MapHotspot[] = [
     { id: 'treasure', x: 23, y: 55, icon: 'door', label: 'Enter the Treasure Room', target: 'featured' },
@@ -63,7 +73,7 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
     { id: 'exit', x: 82, y: 53, icon: 'exit', label: 'Step into the Troll Cave (Etsy)', target: 'visit' }
   ];
 
-  readonly copies = COPY_PATTERN.map((kind, index) => ({ kind, index }));
+  readonly copies = COPY_PATTERN.map((kind, index) => ({ kind, index, image: COPY_IMAGE[kind] }));
 
   private readonly scrollLeft = signal(0);
   private readonly copyWidth = signal(typeof window !== 'undefined' ? window.innerHeight * IMAGE_ASPECT : 2400);
@@ -78,7 +88,7 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
     return COPY_PATTERN.length * this.copyWidth();
   }
 
-  /** Only the un-mirrored ("A") copies get real, clickable hotspots. */
+  /** Only the "A" copies (real destinations) get clickable hotspots. */
   isRealCopy(kind: CopyKind): boolean {
     return kind === 'A';
   }
@@ -149,7 +159,7 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
     }
   };
 
-  /** Silently jump by exactly one full (normal+mirror) period when drifting near either physical edge of the rendered strip. */
+  /** Silently jump by exactly one full (A+B) period when drifting near either physical edge of the rendered strip. */
   private recenterIfNeeded(el: HTMLElement): void {
     const w = this.copyWidth();
     const jump = RECENTER_JUMP_COPIES * w;
