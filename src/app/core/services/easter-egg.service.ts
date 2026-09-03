@@ -25,6 +25,22 @@ export interface SecretDef {
   variant?: 'hidden' | 'ambient';
   /** 'md' (default) or 'lg' for a noticeably bigger icon + glow. */
   size?: 'md' | 'lg';
+  /**
+   * Optional pool of candidate positions. When present, one is picked at
+   * random each time the secret is rendered (i.e. each time you visit
+   * that scene) instead of always using x/y — so it's not in the exact
+   * same spot every visit. x/y above still act as the fallback/default.
+   */
+  spots?: { x: number; y: number }[];
+}
+
+/** Picks a random position for a secret — one of its `spots` if defined, otherwise its fixed x/y. */
+export function resolveSecretSpot(secret: SecretDef): { x: number; y: number } {
+  if (secret.spots && secret.spots.length > 0) {
+    const i = Math.floor(Math.random() * secret.spots.length);
+    return secret.spots[i];
+  }
+  return { x: secret.x, y: secret.y };
 }
 
 /**
@@ -32,13 +48,6 @@ export interface SecretDef {
  * Add an entry here and place a matching <app-hidden-secret> in whichever
  * scene's template — the found/persisted state, the reveal card, and the
  * "X of Y found" counter all pick it up automatically.
- *
- * Positioning note: coin-treasure and cat-tower are deliberately parked in
- * a top corner rather than near the centered product/commission rows.
- * Those rows are horizontally centered and grow wider as more items are
- * added — a secret placed mid-shelf today can end up sitting directly
- * under a future product card. Corners stay clear no matter how many
- * items get added.
  */
 export const SECRETS: SecretDef[] = [
   {
@@ -48,9 +57,16 @@ export const SECRETS: SecretDef[] = [
     x: 9,
     y: 78,
     icon: '✨',
+    variant: 'ambient',
     title: 'A Lucky Firefly',
     message:
-      "It circles you once, twice, and leaves a little shimmer of luck hanging in the air. The woods hold more than one secret, if you know where to look."
+      "It circles you once, twice, and leaves a little shimmer of luck hanging in the air. The woods hold more than one secret, if you know where to look.",
+    spots: [
+      { x: 9, y: 78 },
+      { x: 46, y: 83 },
+      { x: 73, y: 82 },
+      { x: 90, y: 72 }
+    ]
   },
   {
     id: 'coin-treasure',
@@ -83,7 +99,13 @@ export const SECRETS: SecretDef[] = [
     title: 'The Fireflies Stir',
     message: '',
     triggersGame: true,
-    variant: 'ambient'
+    variant: 'ambient',
+    spots: [
+      { x: 52, y: 62 },
+      { x: 24, y: 58 },
+      { x: 68, y: 48 },
+      { x: 82, y: 66 }
+    ]
   }
 ];
 

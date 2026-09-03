@@ -4,7 +4,7 @@ import { HotspotComponent } from '../../../shared/hotspot/hotspot.component';
 import { EdgeArrowComponent } from '../../../shared/edge-arrow/edge-arrow.component';
 import { EdgeScrollDirective } from '../../../shared/edge-scroll/edge-scroll.directive';
 import { HiddenSecretComponent } from '../../../shared/hidden-secret/hidden-secret.component';
-import { SECRETS } from '../../../core/services/easter-egg.service';
+import { SECRETS, resolveSecretSpot } from '../../../core/services/easter-egg.service';
 
 interface MapHotspot {
   id: string;
@@ -75,11 +75,19 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
     { id: 'exit', x: 82, y: 53, icon: 'exit', label: 'Step into the Troll Cave (Etsy)', target: 'visit' }
   ];
 
-  /** Hidden secrets painted into the hero panoramas, split by which copy (A/B) they belong on. */
-  readonly heroSecrets = SECRETS.filter((s) => s.sceneId === 'hero');
+  /**
+   * Hidden secrets painted into the hero panoramas. Positions are resolved
+   * once per component instance (i.e. once per visit to this scene) — any
+   * secret with a `spots` pool lands in a different one of its candidate
+   * spots most times you arrive here, instead of always the same place.
+   */
+  private readonly resolvedHeroSecrets = SECRETS.filter((s) => s.sceneId === 'hero').map((s) => ({
+    ...s,
+    ...resolveSecretSpot(s)
+  }));
 
   secretsFor(kind: CopyKind) {
-    return this.heroSecrets.filter((s) => s.copyKind === kind);
+    return this.resolvedHeroSecrets.filter((s) => s.copyKind === kind);
   }
 
   readonly copies = COPY_PATTERN.map((kind, index) => ({ kind, index, image: COPY_IMAGE[kind] }));
