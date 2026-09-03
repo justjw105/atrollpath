@@ -30,6 +30,13 @@ export interface SecretDef {
  * Add an entry here and place a matching <app-hidden-secret> in whichever
  * scene's template — the found/persisted state, the reveal card, and the
  * "X of Y found" counter all pick it up automatically.
+ *
+ * Positioning note: coin-treasure and cat-tower are deliberately parked in
+ * a top corner rather than near the centered product/commission rows.
+ * Those rows are horizontally centered and grow wider as more items are
+ * added — a secret placed mid-shelf today can end up sitting directly
+ * under a future product card. Corners stay clear no matter how many
+ * items get added.
  */
 export const SECRETS: SecretDef[] = [
   {
@@ -46,8 +53,8 @@ export const SECRETS: SecretDef[] = [
   {
     id: 'coin-treasure',
     sceneId: 'featured',
-    x: 50,
-    y: 42,
+    x: 10,
+    y: 16,
     icon: '🪙',
     title: "The Troll's Spare Change",
     message:
@@ -56,8 +63,8 @@ export const SECRETS: SecretDef[] = [
   {
     id: 'cat-tower',
     sceneId: 'gallery',
-    x: 14,
-    y: 34,
+    x: 6,
+    y: 16,
     icon: '🐈',
     title: 'The Workshop Cat',
     message:
