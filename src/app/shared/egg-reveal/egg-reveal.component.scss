@@ -1,0 +1,65 @@
+.egg-reveal {
+  position: fixed;
+  inset: 0;
+  z-index: 180;
+  background: rgba(5, 7, 4, 0.78);
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  animation: fade-in 0.2s ease;
+}
+
+.egg-reveal__card {
+  width: min(420px, 100%);
+  text-align: center;
+  background: var(--color-moss-900);
+  border: 2px solid var(--color-amber-500);
+  border-radius: var(--radius-lg);
+  padding: 32px 28px 28px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+  animation: pop-in 0.25s ease;
+}
+
+.egg-reveal__icon {
+  display: block;
+  font-size: 2.6rem;
+  margin-bottom: 8px;
+  filter: drop-shadow(0 0 12px rgba(240, 185, 74, 0.6));
+}
+
+.egg-reveal__title {
+  font-family: var(--font-display);
+  color: var(--accent-strong);
+  margin: 6px 0 10px;
+  font-size: 1.4rem;
+}
+
+.egg-reveal__message {
+  color: var(--text-primary);
+  font-size: 0.98rem;
+  margin: 0 0 16px;
+}
+
+.egg-reveal__count {
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin: 0 0 20px;
+}
+
+.egg-reveal__close {
+  padding: 10px 26px;
+  font-size: 0.95rem;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pop-in {
+  from { opacity: 0; transform: scale(0.92); }
+  to { opacity: 1; transform: scale(1); }
+}

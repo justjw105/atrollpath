@@ -1,0 +1,12 @@
+@if (eggs.activeReveal(); as secret) {
+  <div class="egg-reveal" role="dialog" aria-modal="true" (click)="eggs.closeReveal()">
+    <div class="egg-reveal__card" (click)="$event.stopPropagation()">
+      <span class="egg-reveal__icon">{{ secret.icon }}</span>
+      <p class="eyebrow">Secret Found</p>
+      <h3 class="egg-reveal__title">{{ secret.title }}</h3>
+      <p class="egg-reveal__message">{{ secret.message }}</p>
+      <p class="egg-reveal__count">{{ eggs.foundCount() }} of {{ eggs.totalCount }} secrets found</p>
+      <button type="button" class="btn-quest egg-reveal__close" (click)="eggs.closeReveal()">Nice.</button>
+    </div>
+  </div>
+}

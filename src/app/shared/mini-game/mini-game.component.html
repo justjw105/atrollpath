@@ -1,0 +1,47 @@
+@if (eggs.gameOpen()) {
+  <div class="game-overlay" role="dialog" aria-modal="true" aria-label="Catch the Fireflies">
+    <div class="game-panel">
+      <button type="button" class="game-panel__close" (click)="close()" aria-label="Close">✕</button>
+
+      <p class="eyebrow">A Hidden Game</p>
+      <h3 class="game-panel__title">Catch the Fireflies</h3>
+
+      <div class="game-area">
+        @if (state() === 'playing') {
+          <div class="game-area__hud">
+            <span>Score: {{ score() }}</span>
+            <span>{{ timeLeft() }}s</span>
+          </div>
+
+          @for (fly of fireflies(); track fly.id) {
+            <button
+              type="button"
+              class="firefly"
+              [style.left.%]="fly.x"
+              [style.top.%]="fly.y"
+              (click)="catch(fly.id)"
+              aria-label="Catch the firefly"
+            >
+              ✨
+            </button>
+          }
+        }
+
+        @if (state() === 'idle') {
+          <div class="game-area__prompt">
+            <p>Click the fireflies before they flit away. You've got {{ 22 }} seconds.</p>
+            <button type="button" class="btn-quest" (click)="start()">Start</button>
+          </div>
+        }
+
+        @if (state() === 'ended') {
+          <div class="game-area__prompt">
+            <p class="game-area__score">You caught {{ score() }} firefl{{ score() === 1 ? 'y' : 'ies' }}!</p>
+            <p>{{ resultMessage }}</p>
+            <button type="button" class="btn-quest" (click)="start()">Play Again</button>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+}
