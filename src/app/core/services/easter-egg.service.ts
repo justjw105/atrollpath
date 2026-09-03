@@ -14,6 +14,15 @@ export interface SecretDef {
   message: string;
   /** If true, clicking this opens the mini-game instead of showing a reveal card. */
   triggersGame?: boolean;
+  /**
+   * 'hidden' (default) stays nearly invisible until hovered/tapped — the
+   * classic "you have to go looking for it" easter egg. 'ambient' stays
+   * visibly present, gently twinkling/drifting like the painted fireflies
+   * already in that scene, and bursts brighter on hover — findable by
+   * design, since it's the entry point to the mini-game rather than a
+   * pure discovery reward.
+   */
+  variant?: 'hidden' | 'ambient';
 }
 
 /**
@@ -63,7 +72,8 @@ export const SECRETS: SecretDef[] = [
     icon: '✨',
     title: 'The Fireflies Stir',
     message: '',
-    triggersGame: true
+    triggersGame: true,
+    variant: 'ambient'
   }
 ];
 
