@@ -19,6 +19,10 @@
             <app-hotspot [x]="h.x" [y]="h.y" [icon]="h.icon" [label]="h.label" (activate)="go(h.target)" />
           }
         }
+
+        @for (secret of secretsFor(copy.kind); track secret.id) {
+          <app-hidden-secret [secret]="secret" />
+        }
       </div>
     }
   </div>

@@ -34,5 +34,9 @@
   <app-hotspot [x]="8" [y]="92" icon="sign" label="Back to Friends of the Troll" (activate)="go('friends')" />
   <app-hotspot [x]="92" [y]="92" icon="exit" label="Continue to the Exit" (activate)="go('visit')" />
 
+  @for (secret of secrets; track secret.id) {
+    <app-hidden-secret [secret]="secret" />
+  }
+
   <app-item-inspect [item]="selected()" (closed)="closeInspect()" />
 </section>

@@ -36,5 +36,9 @@
   <app-hotspot [x]="8" [y]="88" icon="door" label="Back to the Crossroads" (activate)="go('hero')" />
   <app-hotspot [x]="92" [y]="88" icon="sign" label="Continue to Friends of the Troll" (activate)="go('friends')" />
 
+  @for (secret of secrets; track secret.id) {
+    <app-hidden-secret [secret]="secret" />
+  }
+
   <app-item-inspect [item]="selected()" (closed)="closeInspect()" />
 </section>

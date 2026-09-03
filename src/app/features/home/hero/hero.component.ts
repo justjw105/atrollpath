@@ -3,6 +3,8 @@ import { SceneService } from '../../../core/services/scene.service';
 import { HotspotComponent } from '../../../shared/hotspot/hotspot.component';
 import { EdgeArrowComponent } from '../../../shared/edge-arrow/edge-arrow.component';
 import { EdgeScrollDirective } from '../../../shared/edge-scroll/edge-scroll.directive';
+import { HiddenSecretComponent } from '../../../shared/hidden-secret/hidden-secret.component';
+import { SECRETS } from '../../../core/services/easter-egg.service';
 
 interface MapHotspot {
   id: string;
@@ -48,7 +50,7 @@ const COPY_IMAGE: Record<CopyKind, string> = {
 @Component({
   selector: 'app-hero',
   standalone: true,
-  imports: [HotspotComponent, EdgeArrowComponent, EdgeScrollDirective],
+  imports: [HotspotComponent, EdgeArrowComponent, EdgeScrollDirective, HiddenSecretComponent],
   templateUrl: './hero.component.html',
   styleUrl: './hero.component.scss'
 })
@@ -72,6 +74,13 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
     { id: 'workbench', x: 63, y: 30, icon: 'sign', label: "Enter the Maker's Tower", target: 'gallery' },
     { id: 'exit', x: 82, y: 53, icon: 'exit', label: 'Step into the Troll Cave (Etsy)', target: 'visit' }
   ];
+
+  /** Hidden secrets painted into the hero panoramas, split by which copy (A/B) they belong on. */
+  readonly heroSecrets = SECRETS.filter((s) => s.sceneId === 'hero');
+
+  secretsFor(kind: CopyKind) {
+    return this.heroSecrets.filter((s) => s.copyKind === kind);
+  }
 
   readonly copies = COPY_PATTERN.map((kind, index) => ({ kind, index, image: COPY_IMAGE[kind] }));
 

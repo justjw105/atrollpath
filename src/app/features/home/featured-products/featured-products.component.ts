@@ -4,11 +4,13 @@ import { SceneService } from '../../../core/services/scene.service';
 import { SfxService } from '../../../core/services/sfx.service';
 import { HotspotComponent } from '../../../shared/hotspot/hotspot.component';
 import { ItemInspectComponent, InspectableItem } from '../../../shared/item-inspect/item-inspect.component';
+import { HiddenSecretComponent } from '../../../shared/hidden-secret/hidden-secret.component';
+import { SECRETS } from '../../../core/services/easter-egg.service';
 
 @Component({
   selector: 'app-featured-products',
   standalone: true,
-  imports: [HotspotComponent, ItemInspectComponent],
+  imports: [HotspotComponent, ItemInspectComponent, HiddenSecretComponent],
   templateUrl: './featured-products.component.html',
   styleUrl: './featured-products.component.scss'
 })
@@ -18,6 +20,7 @@ export class FeaturedProductsComponent {
   readonly scene = inject(SceneService);
 
   readonly items = this.products.getFeaturedProducts();
+  readonly secrets = SECRETS.filter((s) => s.sceneId === 'featured');
 
   /**
    * Derived entirely from the shared, URL-synced activeItemSlug signal —

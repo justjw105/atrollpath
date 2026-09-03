@@ -4,6 +4,8 @@ import { SceneService } from '../../../core/services/scene.service';
 import { SfxService } from '../../../core/services/sfx.service';
 import { HotspotComponent } from '../../../shared/hotspot/hotspot.component';
 import { ItemInspectComponent, InspectableItem } from '../../../shared/item-inspect/item-inspect.component';
+import { HiddenSecretComponent } from '../../../shared/hidden-secret/hidden-secret.component';
+import { SECRETS } from '../../../core/services/easter-egg.service';
 
 /**
  * The Maker's Tower scene — showcases custom commission pieces. Add more
@@ -14,7 +16,7 @@ import { ItemInspectComponent, InspectableItem } from '../../../shared/item-insp
 @Component({
   selector: 'app-gallery',
   standalone: true,
-  imports: [HotspotComponent, ItemInspectComponent],
+  imports: [HotspotComponent, ItemInspectComponent, HiddenSecretComponent],
   templateUrl: './gallery.component.html',
   styleUrl: './gallery.component.scss'
 })
@@ -24,6 +26,7 @@ export class GalleryComponent {
   readonly scene = inject(SceneService);
 
   readonly commissions = this.products.getCommissions();
+  readonly secrets = SECRETS.filter((s) => s.sceneId === 'gallery');
 
   /** Derived from the shared, URL-synced activeItemSlug signal — see FeaturedProductsComponent for why. */
   readonly selected = computed<InspectableItem | null>(() => {
