@@ -10,6 +10,7 @@
         @if (state() === 'playing') {
           <div class="game-area__hud">
             <span>Score: {{ score() }}</span>
+            <span>Best: {{ bestScore() }}</span>
             <span>{{ timeLeft() }}s</span>
           </div>
 
@@ -30,13 +31,20 @@
         @if (state() === 'idle') {
           <div class="game-area__prompt">
             <p>Click the fireflies before they flit away. You've got {{ 22 }} seconds.</p>
+            @if (bestScore() > 0) {
+              <p class="game-area__best">Your best: {{ bestScore() }} 🔥</p>
+            }
             <button type="button" class="btn-quest" (click)="start()">Start</button>
           </div>
         }
 
         @if (state() === 'ended') {
           <div class="game-area__prompt">
+            @if (isNewBest()) {
+              <p class="game-area__new-best">✨ New Best! ✨</p>
+            }
             <p class="game-area__score">You caught {{ score() }} firefl{{ score() === 1 ? 'y' : 'ies' }}!</p>
+            <p class="game-area__best">Your best: {{ bestScore() }} 🔥</p>
             <p>{{ resultMessage }}</p>
             <button type="button" class="btn-quest" (click)="start()">Play Again</button>
           </div>
