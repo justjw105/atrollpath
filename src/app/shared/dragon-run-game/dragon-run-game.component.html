@@ -1,0 +1,60 @@
+@if (eggs.activeGame() === 'dragon-run') {
+  <div class="game-overlay" role="dialog" aria-modal="true" aria-label="Dragon Run">
+    <div class="game-panel">
+      <button type="button" class="game-panel__close" (click)="close()" aria-label="Close">✕</button>
+
+      <p class="eyebrow">A Hidden Game</p>
+      <h3 class="game-panel__title">Dragon Run</h3>
+
+      <div
+        class="game-area"
+        #area
+        tabindex="0"
+        (keydown)="onKeydown($event)"
+        (pointerdown)="onPointerDown($event)"
+        (pointermove)="onPointerMove($event)"
+        (pointerup)="onPointerUp()"
+        (pointerleave)="onPointerUp()"
+      >
+        @if (state() === 'playing') {
+          <div class="game-area__hud">
+            <span>Score: {{ score }}</span>
+            <span>Best: {{ bestScore() }}</span>
+          </div>
+
+          @for (rock of obstacles(); track rock.id) {
+            <span class="sprite sprite--rock" [style.left.%]="rock.x" [style.top.%]="rock.y">🪨</span>
+          }
+
+          @for (coin of coins(); track coin.id) {
+            <span class="sprite sprite--coin" [style.left.%]="coin.x" [style.top.%]="coin.y">🪩</span>
+          }
+
+          <span class="sprite sprite--dragon" [style.left.%]="dragonX()">🐉</span>
+        }
+
+        @if (state() === 'idle') {
+          <div class="game-area__prompt">
+            <p>Drag (or use ← →) to steer the dragon. Dodge the rocks, grab the coins. One hit ends the run.</p>
+            @if (bestScore() > 0) {
+              <p class="game-area__best">Your best: {{ bestScore() }} 🔥</p>
+            }
+            <button type="button" class="btn-quest" (click)="start()">Take Flight</button>
+          </div>
+        }
+
+        @if (state() === 'ended') {
+          <div class="game-area__prompt">
+            @if (isNewBest()) {
+              <p class="game-area__new-best">✨ New Best! ✨</p>
+            }
+            <p class="game-area__score">Score: {{ score }}</p>
+            <p class="game-area__best">Your best: {{ bestScore() }} 🔥</p>
+            <p>{{ resultMessage }}</p>
+            <button type="button" class="btn-quest" (click)="start()">Fly Again</button>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+}

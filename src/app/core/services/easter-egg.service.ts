@@ -1,6 +1,8 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { SfxService } from './sfx.service';
 
+export type GameId = 'fireflies' | 'dragon-run';
+
 export interface SecretDef {
   id: string;
   /** Which scene this is hidden in — for reference/organization only. */
@@ -12,15 +14,15 @@ export interface SecretDef {
   icon: string;
   title: string;
   message: string;
-  /** If true, clicking this opens the mini-game instead of showing a reveal card. */
-  triggersGame?: boolean;
+  /** If set, clicking this opens that hidden game instead of showing a reveal card. */
+  triggersGame?: GameId;
   /**
    * 'hidden' (default) stays nearly invisible until hovered/tapped — the
    * classic "you have to go looking for it" easter egg. 'ambient' stays
    * visibly present, gently twinkling/drifting like the painted fireflies
    * already in that scene, and bursts brighter on hover — findable by
-   * design, since it's the entry point to the mini-game rather than a
-   * pure discovery reward.
+   * design, since it's the entry point to a mini-game rather than a pure
+   * discovery reward.
    */
   variant?: 'hidden' | 'ambient';
   /** 'md' (default) or 'lg' for a noticeably bigger icon + glow. */
@@ -47,7 +49,10 @@ export function resolveSecretSpot(secret: SecretDef): { x: number; y: number } {
  * GROWTH POINT: this is the single source of truth for hidden secrets.
  * Add an entry here and place a matching <app-hidden-secret> in whichever
  * scene's template — the found/persisted state, the reveal card, and the
- * "X of Y found" counter all pick it up automatically.
+ * "X of Y found" counter all pick it up automatically. To hide a new game
+ * behind a secret, set `triggersGame` to that game's id and mount the
+ * matching `<app-*-game>` component globally in app.component (see
+ * app-mini-game / app-dragon-run-game for the pattern).
  */
 export const SECRETS: SecretDef[] = [
   {
@@ -98,7 +103,7 @@ export const SECRETS: SecretDef[] = [
     icon: '✨',
     title: 'The Fireflies Stir',
     message: '',
-    triggersGame: true,
+    triggersGame: 'fireflies',
     variant: 'ambient',
     spots: [
       { x: 52, y: 62 },
@@ -106,6 +111,18 @@ export const SECRETS: SecretDef[] = [
       { x: 68, y: 48 },
       { x: 82, y: 66 }
     ]
+  },
+  {
+    id: 'dragon-egg-trigger',
+    sceneId: 'hero',
+    copyKind: 'A',
+    x: 30,
+    y: 88,
+    icon: '🥚',
+    title: 'A Dragon Egg?',
+    message: '',
+    triggersGame: 'dragon-run',
+    variant: 'ambient'
   }
 ];
 
@@ -117,9 +134,10 @@ export class EasterEggService {
 
   readonly foundIds = signal<Set<string>>(this.readStored());
   readonly activeReveal = signal<SecretDef | null>(null);
-  readonly gameOpen = signal(false);
+  /** Which hidden game (if any) is currently open. Only one can be open at a time. */
+  readonly activeGame = signal<GameId | null>(null);
 
-  /** The mini-game trigger doesn't count toward the collectible total. */
+  /** Secrets that trigger a game don't count toward the collectible total. */
   private readonly countable = SECRETS.filter((s) => !s.triggersGame);
   readonly totalCount = this.countable.length;
   readonly foundCount = computed(() => this.countable.filter((s) => this.foundIds().has(s.id)).length);
@@ -131,7 +149,7 @@ export class EasterEggService {
   discover(secret: SecretDef): void {
     if (secret.triggersGame) {
       this.sfx.play('sparkle');
-      this.gameOpen.set(true);
+      this.activeGame.set(secret.triggersGame);
       return;
     }
 
@@ -151,7 +169,7 @@ export class EasterEggService {
   }
 
   closeGame(): void {
-    this.gameOpen.set(false);
+    this.activeGame.set(null);
   }
 
   private readStored(): Set<string> {

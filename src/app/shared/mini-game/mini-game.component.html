@@ -1,4 +1,4 @@
-@if (eggs.gameOpen()) {
+@if (eggs.activeGame() === 'fireflies') {
   <div class="game-overlay" role="dialog" aria-modal="true" aria-label="Catch the Fireflies">
     <div class="game-panel">
       <button type="button" class="game-panel__close" (click)="close()" aria-label="Close">✕</button>

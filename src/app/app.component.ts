@@ -6,6 +6,7 @@ import { SceneTransitionComponent } from './shared/scene-transition/scene-transi
 import { IntroSplashComponent } from './shared/intro-splash/intro-splash.component';
 import { EggRevealComponent } from './shared/egg-reveal/egg-reveal.component';
 import { MiniGameComponent } from './shared/mini-game/mini-game.component';
+import { DragonRunGameComponent } from './shared/dragon-run-game/dragon-run-game.component';
 import { SfxService } from './core/services/sfx.service';
 
 @Component({
@@ -18,7 +19,8 @@ import { SfxService } from './core/services/sfx.service';
     SceneTransitionComponent,
     IntroSplashComponent,
     EggRevealComponent,
-    MiniGameComponent
+    MiniGameComponent,
+    DragonRunGameComponent
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
