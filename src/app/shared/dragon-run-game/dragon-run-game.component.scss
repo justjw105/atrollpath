@@ -111,22 +111,25 @@
   position: absolute;
   transform: translate(-50%, -50%);
   pointer-events: none;
-  line-height: 1;
   will-change: top, left;
+  object-fit: contain;
 }
 
 .sprite--rock {
-  font-size: 1.7rem;
+  width: 42px;
+  height: 42px;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6));
 }
 
 .sprite--coin {
-  font-size: 1.4rem;
+  width: 32px;
+  height: 32px;
   filter: drop-shadow(0 0 8px rgba(240, 185, 74, 0.85));
 }
 
 .sprite--dragon {
-  font-size: 2rem;
+  width: 52px;
+  height: 52px;
   top: 84%;
   filter: drop-shadow(0 0 10px rgba(240, 185, 74, 0.6));
   transition: left 0.03s linear;

@@ -11,7 +11,14 @@ export interface SecretDef {
   copyKind?: 'A' | 'B';
   x: number;
   y: number;
+  /** Emoji fallback, used whenever `iconImage` isn't set. */
   icon: string;
+  /**
+   * Optional custom sprite (from public/assets/sprites/) to render instead
+   * of the emoji in `icon`. Same glow/hover/found styling either way —
+   * this only swaps the glyph itself for a piece of matching custom art.
+   */
+  iconImage?: string;
   title: string;
   message: string;
   /** If set, clicking this opens that hidden game instead of showing a reveal card. */
@@ -62,6 +69,7 @@ export const SECRETS: SecretDef[] = [
     x: 9,
     y: 78,
     icon: '✨',
+    iconImage: 'assets/sprites/firefly.webp',
     variant: 'ambient',
     title: 'A Lucky Firefly',
     message:
@@ -79,6 +87,7 @@ export const SECRETS: SecretDef[] = [
     x: 10,
     y: 16,
     icon: '🪙',
+    iconImage: 'assets/sprites/coin.webp',
     title: "The Troll's Spare Change",
     message:
       "Tucked behind a shelf: a single old coin, worn smooth from years of counting. Not worth much to spend — but every troll needs a lucky coin."
@@ -89,6 +98,7 @@ export const SECRETS: SecretDef[] = [
     x: 6,
     y: 16,
     icon: '🐱',
+    iconImage: 'assets/sprites/cat.webp',
     size: 'lg',
     title: 'The Workshop Cat',
     message:
@@ -101,6 +111,7 @@ export const SECRETS: SecretDef[] = [
     x: 52,
     y: 62,
     icon: '✨',
+    iconImage: 'assets/sprites/firefly.webp',
     title: 'The Fireflies Stir',
     message: '',
     triggersGame: 'fireflies',
@@ -119,6 +130,7 @@ export const SECRETS: SecretDef[] = [
     x: 30,
     y: 88,
     icon: '🥚',
+    iconImage: 'assets/sprites/dragon-egg.webp',
     title: 'A Dragon Egg?',
     message: '',
     triggersGame: 'dragon-run',

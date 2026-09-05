@@ -23,14 +23,14 @@
           </div>
 
           @for (rock of obstacles(); track rock.id) {
-            <span class="sprite sprite--rock" [style.left.%]="rock.x" [style.top.%]="rock.y">🪨</span>
+            <img class="sprite sprite--rock" [style.left.%]="rock.x" [style.top.%]="rock.y" src="assets/sprites/rock.webp" alt="">
           }
 
           @for (coin of coins(); track coin.id) {
-            <span class="sprite sprite--coin" [style.left.%]="coin.x" [style.top.%]="coin.y">🪩</span>
+            <img class="sprite sprite--coin" [style.left.%]="coin.x" [style.top.%]="coin.y" src="assets/sprites/coin.webp" alt="">
           }
 
-          <span class="sprite sprite--dragon" [style.left.%]="dragonX()">🐉</span>
+          <img class="sprite sprite--dragon" [style.left.%]="dragonX()" src="assets/sprites/dragon.webp" alt="">
         }
 
         @if (state() === 'idle') {
