@@ -96,6 +96,12 @@ export class DragonRunGameComponent implements OnDestroy {
 
     this.lastTimestamp = performance.now();
     this.rafId = requestAnimationFrame(this.tick);
+
+    // Arrow-key control needs the game-area to actually hold keyboard
+    // focus — clicking "Take Flight" doesn't move focus there on its own,
+    // so without this, arrow keys silently go nowhere until the user
+    // happens to click/tab into the play area themselves.
+    queueMicrotask(() => this.areaRef?.nativeElement.focus());
   }
 
   close(): void {
@@ -112,6 +118,9 @@ export class DragonRunGameComponent implements OnDestroy {
   onPointerDown(event: PointerEvent): void {
     this.dragging = true;
     this.updateDragonFromPointer(event);
+    // A click/tap anywhere in the play area should also grab focus, so
+    // keyboard control keeps working after a mouse/touch interaction.
+    this.areaRef?.nativeElement.focus();
   }
 
   onPointerMove(event: PointerEvent): void {
