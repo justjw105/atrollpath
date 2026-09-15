@@ -4,6 +4,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   padding: 0;
   border: 0;
@@ -11,14 +12,30 @@
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
   z-index: 5;
+  /* Generous invisible hit target — independent of the glow's visible
+     footprint below, so it stays easy to click without needing to look
+     like an obvious UI pin. */
+  width: 64px;
+  height: 64px;
 }
 
+/* The waypoint "marker" is now warm light bleeding out of the landmark
+   itself (doorway, signpost lantern, cave mouth) instead of a token
+   floating on top of the scene. Two layered, heavily blurred radial
+   gradients — a soft wide halo plus a brighter, tighter core — read as
+   an actual light source (matching the painted lanterns already in the
+   scene) rather than a flat UI badge. Visible-but-quiet by default,
+   blooms brighter on hover/focus. */
 .hotspot__ring {
   position: absolute;
-  inset: -14px;
+  inset: -30px;
   border-radius: 50%;
-  border: 2px solid rgba(240, 185, 74, 0.55);
-  animation: pulse-ring 2.2s ease-out infinite;
+  border: 0;
+  background: radial-gradient(circle, rgba(255, 205, 120, 0.55), rgba(240, 185, 74, 0.22) 45%, transparent 75%);
+  filter: blur(14px);
+  animation: glow-breathe 4.4s ease-in-out infinite;
+  pointer-events: none;
+  mix-blend-mode: screen;
 }
 
 .hotspot__core {
@@ -26,15 +43,24 @@
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, var(--color-amber-400), var(--color-amber-600) 75%);
-  box-shadow: 0 0 18px 6px rgba(240, 185, 74, 0.55), 0 3px 8px rgba(0, 0, 0, 0.5);
-  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  background: radial-gradient(circle, rgba(255, 226, 168, 0.95), rgba(240, 185, 74, 0.5) 55%, transparent 78%);
+  filter: blur(4px);
+  opacity: 0.85;
+  mix-blend-mode: screen;
+  transition: transform 0.25s ease, opacity 0.25s ease, filter 0.25s ease;
+}
+
+.hotspot:hover .hotspot__ring,
+.hotspot:focus-visible .hotspot__ring {
+  animation-duration: 1.8s;
+  background: radial-gradient(circle, rgba(255, 210, 130, 0.75), rgba(240, 185, 74, 0.32) 45%, transparent 76%);
 }
 
 .hotspot:hover .hotspot__core,
 .hotspot:focus-visible .hotspot__core {
-  transform: scale(1.22);
-  box-shadow: 0 0 28px 10px rgba(240, 185, 74, 0.75), 0 3px 10px rgba(0, 0, 0, 0.55);
+  transform: scale(1.35);
+  opacity: 1;
+  filter: blur(3px);
 }
 
 .hotspot__label {
@@ -60,22 +86,29 @@
 }
 
 .hotspot--chest .hotspot__core {
-  background: radial-gradient(circle at 35% 30%, #ffd98a, #c9791f 75%);
+  background: radial-gradient(circle, rgba(255, 235, 190, 0.95), rgba(201, 121, 31, 0.55) 55%, transparent 78%);
+}
+
+/* Doors/cave mouth read as cool, mossy-lantern light rather than warm
+   firelight — matches the teal accent already used elsewhere on the site. */
+.hotspot--door .hotspot__ring,
+.hotspot--exit .hotspot__ring {
+  background: radial-gradient(circle, rgba(140, 224, 206, 0.5), rgba(31, 92, 86, 0.22) 45%, transparent 75%);
 }
 
 .hotspot--door .hotspot__core,
 .hotspot--exit .hotspot__core {
-  background: radial-gradient(circle at 35% 30%, #9adfd1, #1a4a47 75%);
-  box-shadow: 0 0 18px 6px rgba(31, 92, 86, 0.55), 0 3px 8px rgba(0, 0, 0, 0.5);
+  background: radial-gradient(circle, rgba(190, 240, 226, 0.9), rgba(31, 92, 86, 0.5) 55%, transparent 78%);
 }
 
-.hotspot--door:hover .hotspot__core,
-.hotspot--exit:hover .hotspot__core {
-  box-shadow: 0 0 28px 10px rgba(31, 92, 86, 0.75), 0 3px 10px rgba(0, 0, 0, 0.55);
+.hotspot--door:hover .hotspot__ring,
+.hotspot--exit:hover .hotspot__ring,
+.hotspot--door:focus-visible .hotspot__ring,
+.hotspot--exit:focus-visible .hotspot__ring {
+  background: radial-gradient(circle, rgba(140, 224, 206, 0.7), rgba(31, 92, 86, 0.32) 45%, transparent 76%);
 }
 
-@keyframes pulse-ring {
-  0% { transform: scale(0.8); opacity: 0.8; }
-  70% { transform: scale(1.5); opacity: 0; }
-  100% { transform: scale(1.5); opacity: 0; }
+@keyframes glow-breathe {
+  0%, 100% { opacity: 0.65; transform: scale(0.92); }
+  50% { opacity: 1; transform: scale(1.08); }
 }
