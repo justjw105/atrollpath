@@ -5,6 +5,7 @@ import { FeaturedProductsComponent } from './featured-products/featured-products
 import { GalleryComponent } from './gallery/gallery.component';
 import { EtsyCtaComponent } from './etsy-cta/etsy-cta.component';
 import { FriendsComponent } from './friends/friends.component';
+import { CampComponent } from './camp/camp.component';
 import { SceneService } from '../../core/services/scene.service';
 
 /**
@@ -26,7 +27,14 @@ import { SceneService } from '../../core/services/scene.service';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [HeroComponent, FeaturedProductsComponent, GalleryComponent, EtsyCtaComponent, FriendsComponent],
+  imports: [
+    HeroComponent,
+    FeaturedProductsComponent,
+    GalleryComponent,
+    EtsyCtaComponent,
+    FriendsComponent,
+    CampComponent
+  ],
   templateUrl: './home.component.html'
 })
 export class HomeComponent {
