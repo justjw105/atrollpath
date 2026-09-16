@@ -18,7 +18,8 @@ export class HotspotComponent {
   @Input() x = 50;
   @Input() y = 50;
   @Input() label = '';
-  @Input() icon: 'door' | 'chest' | 'sign' | 'exit' = 'sign';
+  /** 'camp' is a plain firelight glow with no painted structure behind it — see hotspot.component.scss. */
+  @Input() icon: 'door' | 'chest' | 'sign' | 'exit' | 'camp' = 'sign';
   @Output() activate = new EventEmitter<void>();
 
   onHoverEnter(): void {

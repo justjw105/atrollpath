@@ -1,0 +1,29 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // "Join the Party" newsletter signups. Public visitors may CREATE a
+    // subscriber document (shaped exactly like { email, source, createdAt }),
+    // but can never read, list, update, or delete any entry — that keeps the
+    // full email list private to you (viewable only via the Firebase console
+    // or Admin SDK, which bypass these client-facing rules).
+    match /subscribers/{docId} {
+      allow create: if request.resource.data.keys().hasOnly(['email', 'source', 'createdAt'])
+                    && request.resource.data.email is string
+                    && request.resource.data.email.size() > 3
+                    && request.resource.data.email.size() < 200
+                    && request.resource.data.email.matches('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$')
+                    && request.resource.data.source is string
+                    && request.resource.data.source.size() < 50
+                    && request.resource.data.createdAt == request.time;
+
+      allow read, update, delete: if false;
+    }
+
+    // Everything else stays locked down by default.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
