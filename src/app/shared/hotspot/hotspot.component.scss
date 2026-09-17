@@ -12,20 +12,10 @@
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
   z-index: 5;
-  /* Generous invisible hit target — independent of the glow's visible
-     footprint below, so it stays easy to click without needing to look
-     like an obvious UI pin. */
   width: 64px;
   height: 64px;
 }
 
-/* The waypoint "marker" is now warm light bleeding out of the landmark
-   itself (doorway, signpost lantern, cave mouth) instead of a token
-   floating on top of the scene. Two layered, heavily blurred radial
-   gradients — a soft wide halo plus a brighter, tighter core — read as
-   an actual light source (matching the painted lanterns already in the
-   scene) rather than a flat UI badge. Visible-but-quiet by default,
-   blooms brighter on hover/focus. */
 .hotspot__ring {
   position: absolute;
   inset: -30px;
@@ -89,8 +79,6 @@
   background: radial-gradient(circle, rgba(255, 235, 190, 0.95), rgba(201, 121, 31, 0.55) 55%, transparent 78%);
 }
 
-/* Doors/cave mouth read as cool, mossy-lantern light rather than warm
-   firelight — matches the teal accent already used elsewhere on the site. */
 .hotspot--door .hotspot__ring,
 .hotspot--exit .hotspot__ring {
   background: radial-gradient(circle, rgba(140, 224, 206, 0.5), rgba(31, 92, 86, 0.22) 45%, transparent 75%);
@@ -108,7 +96,40 @@
   background: radial-gradient(circle, rgba(140, 224, 206, 0.7), rgba(31, 92, 86, 0.32) 45%, transparent 76%);
 }
 
+.hotspot--camp .hotspot__ring {
+  inset: -38px;
+  background: radial-gradient(circle, rgba(255, 175, 90, 0.5), rgba(240, 140, 40, 0.2) 45%, transparent 75%);
+  animation: fire-flicker 2.6s ease-in-out infinite;
+}
+
+.hotspot--camp .hotspot__core {
+  width: 22px;
+  height: 22px;
+  background: radial-gradient(circle, rgba(255, 214, 150, 0.9), rgba(240, 140, 40, 0.4) 55%, transparent 78%);
+  filter: blur(6px);
+  opacity: 0.75;
+  animation: fire-flicker 1.9s ease-in-out infinite;
+}
+
+.hotspot--camp:hover .hotspot__ring,
+.hotspot--camp:focus-visible .hotspot__ring {
+  animation-duration: 1s;
+  background: radial-gradient(circle, rgba(255, 190, 110, 0.7), rgba(240, 140, 40, 0.3) 45%, transparent 76%);
+}
+
+.hotspot--camp:hover .hotspot__core,
+.hotspot--camp:focus-visible .hotspot__core {
+  opacity: 1;
+}
+
 @keyframes glow-breathe {
   0%, 100% { opacity: 0.65; transform: scale(0.92); }
   50% { opacity: 1; transform: scale(1.08); }
+}
+
+@keyframes fire-flicker {
+  0%, 100% { opacity: 0.6; transform: scale(0.9); }
+  30% { opacity: 0.95; transform: scale(1.05); }
+  50% { opacity: 0.7; transform: scale(0.97); }
+  75% { opacity: 1; transform: scale(1.1); }
 }

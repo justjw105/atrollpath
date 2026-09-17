@@ -1,0 +1,52 @@
+<div class="party-form" [class.party-form--compact]="compact">
+  @if (state() === 'success') {
+    <div class="party-form__success">
+      <p class="party-form__success-title">You're in! 🎉</p>
+      <p class="party-form__success-body">Welcome to the party — watch your inbox for news from the Troll Cave.</p>
+    </div>
+  } @else {
+    <form (ngSubmit)="submit()" #f="ngForm" autocomplete="off">
+      <div class="party-form__row">
+        <label class="party-form__label" for="party-email-{{ source }}">Your email</label>
+        <input
+          id="party-email-{{ source }}"
+          class="party-form__input"
+          type="email"
+          name="email"
+          required
+          placeholder="you@example.com"
+          [ngModel]="email()"
+          (ngModelChange)="email.set($event)"
+          [disabled]="state() === 'submitting'"
+        >
+      </div>
+
+      <!-- Honeypot: real visitors never see this field. Any bot that fills
+           every input on the page will fill it, which silently flags it. -->
+      <div class="party-form__honeypot" aria-hidden="true">
+        <label for="party-website-{{ source }}">Website</label>
+        <input
+          id="party-website-{{ source }}"
+          type="text"
+          name="website"
+          tabindex="-1"
+          autocomplete="off"
+          [ngModel]="website()"
+          (ngModelChange)="website.set($event)"
+        >
+      </div>
+
+      <button type="submit" class="btn-quest party-form__submit" [disabled]="state() === 'submitting' || !f.form.valid">
+        {{ state() === 'submitting' ? 'Joining…' : 'Join the Party ⚔️' }}
+      </button>
+
+      @if (state() === 'error') {
+        <p class="party-form__error" role="alert">
+          Hmm, that didn't work — double-check your email and give it another try.
+        </p>
+      }
+
+      <p class="party-form__fineprint">No spam, just the occasional dragon sighting. Unsubscribe anytime.</p>
+    </form>
+  }
+</div>

@@ -1,0 +1,13 @@
+@if (party.isOpen()) {
+  <div class="party-overlay" role="dialog" aria-modal="true" aria-label="Join the Party">
+    <div class="party-panel">
+      <button type="button" class="party-panel__close" (click)="party.close()" aria-label="Close">✕</button>
+
+      <p class="eyebrow">A Standing Invitation</p>
+      <h3 class="party-panel__title">🎉 Join the Party</h3>
+      <p class="party-panel__subtitle">Get word of new pieces, workshop tales, and rare finds before anyone else.</p>
+
+      <app-join-party-form source="hud-modal" [compact]="true" />
+    </div>
+  </div>
+}

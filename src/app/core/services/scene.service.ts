@@ -28,14 +28,17 @@ export interface SceneNode {
  * x/y here are calibrated to match the actual landmarks painted into
  * hero-panorama.webp (the tree cave-door, the signpost crossroads, the workshop tower, the rocky
  * cave entrance, and the path receding into the distance) so the
- * overlay markers land on the right spots.
+ * overlay markers land on the right spots. The Camp is reached via a warm
+ * firelight glow tucked into an open patch of forest rather than a
+ * separately-painted landmark — see the 'camp' hotspot in hero.component.ts.
  */
 export const SCENES: SceneNode[] = [
   { id: 'hero', label: 'The Path', x: 50, y: 88, path: '/' },
   { id: 'featured', label: 'Treasure Room', x: 23, y: 55, path: '/treasure-room' },
   { id: 'friends', label: 'Friends of the Troll', x: 35, y: 53, path: '/friends-of-the-troll' },
   { id: 'gallery', label: "The Maker's Tower", x: 63, y: 30, path: '/the-makers-tower' },
-  { id: 'visit', label: 'Troll Cave Exit', x: 82, y: 53, path: '/troll-cave' }
+  { id: 'visit', label: 'Troll Cave Exit', x: 82, y: 53, path: '/troll-cave' },
+  { id: 'camp', label: 'The Camp', x: 71, y: 67, path: '/the-camp' }
 ];
 
 /** SEO copy per scene — title/description weave in the shop's target search terms naturally. */
@@ -73,6 +76,13 @@ const SCENE_SEO: Record<string, SceneSeo> = {
     description:
       'Step into the Troll Cave and shop handmade custom stained glass, glass etching, and whimsical fantasy gifts on Etsy.',
     image: '/assets/img/scene-cave-door.webp'
+  },
+  camp: {
+    path: '/the-camp',
+    title: 'Join the Party | ATrollPath Newsletter — ATrollPath',
+    description:
+      'Pull up a log by the fire and join the party — sign up for ATrollPath news on new stained glass pieces, workshop tales, and rare finds.',
+    image: '/assets/img/scene-camp.webp'
   }
 };
 

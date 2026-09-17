@@ -26,5 +26,6 @@ export const routes: Routes = [
   { path: 'the-makers-tower', component: HomeComponent, data: { sceneId: 'gallery' } },
   { path: 'the-makers-tower/:item', component: HomeComponent, data: { sceneId: 'gallery' } },
   { path: 'troll-cave', component: HomeComponent, data: { sceneId: 'visit' } },
+  { path: 'the-camp', component: HomeComponent, data: { sceneId: 'camp' } },
   { path: '**', redirectTo: '' }
 ];

@@ -10,7 +10,7 @@ interface MapHotspot {
   id: string;
   x: number;
   y: number;
-  icon: 'door' | 'sign' | 'chest' | 'exit';
+  icon: 'door' | 'sign' | 'chest' | 'exit' | 'camp';
   label: string;
   target: string;
 }
@@ -72,7 +72,8 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
     { id: 'treasure', x: 23, y: 55, icon: 'door', label: 'Enter the Treasure Room', target: 'featured' },
     { id: 'signpost', x: 35, y: 53, icon: 'sign', label: 'Meet Friends of the Troll', target: 'friends' },
     { id: 'workbench', x: 63, y: 30, icon: 'sign', label: "Enter the Maker's Tower", target: 'gallery' },
-    { id: 'exit', x: 82, y: 53, icon: 'exit', label: 'Step into the Troll Cave (Etsy)', target: 'visit' }
+    { id: 'exit', x: 82, y: 53, icon: 'exit', label: 'Step into the Troll Cave (Etsy)', target: 'visit' },
+    { id: 'camp', x: 71, y: 67, icon: 'camp', label: 'Follow the Firelight to the Camp', target: 'camp' }
   ];
 
   /**

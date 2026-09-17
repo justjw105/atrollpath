@@ -5,6 +5,10 @@
 
   <div class="hud__spacer"></div>
 
+  <button type="button" class="hud__btn hud__btn--party" (click)="party.open()" aria-label="Join the Party mailing list">
+    🎉 <span class="hud__btn-text">Join the Party</span>
+  </button>
+
   <button type="button" class="hud__btn" (click)="sfx.toggle()" [attr.aria-pressed]="sfx.enabled()">
     @if (sfx.enabled()) {
       <span>🔊 <span class="hud__btn-text">Sound</span></span>
