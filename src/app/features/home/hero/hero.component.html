@@ -14,10 +14,8 @@
             : 'A misty stretch of enchanted forest with a waterfall, glowing standing stones, and an old stone bridge'"
         >
 
-        @if (isRealCopy(copy.kind)) {
-          @for (h of hotspots; track h.id) {
-            <app-hotspot [x]="h.x" [y]="h.y" [icon]="h.icon" [label]="h.label" (activate)="go(h.target)" />
-          }
+        @for (h of hotspotsFor(copy.kind); track h.id) {
+          <app-hotspot [x]="h.x" [y]="h.y" [icon]="h.icon" [label]="h.label" (activate)="go(h.target)" />
         }
 
         @for (secret of secretsFor(copy.kind); track secret.id) {

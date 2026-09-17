@@ -13,6 +13,8 @@ interface MapHotspot {
   icon: 'door' | 'sign' | 'chest' | 'exit' | 'camp';
   label: string;
   target: string;
+  /** Which panorama copy this hotspot is painted/glowing on. Defaults to 'A' (the real-landmark copy) when omitted. */
+  copyKind?: CopyKind;
 }
 
 /**
@@ -73,7 +75,9 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
     { id: 'signpost', x: 35, y: 53, icon: 'sign', label: 'Meet Friends of the Troll', target: 'friends' },
     { id: 'workbench', x: 63, y: 30, icon: 'sign', label: "Enter the Maker's Tower", target: 'gallery' },
     { id: 'exit', x: 82, y: 53, icon: 'exit', label: 'Step into the Troll Cave (Etsy)', target: 'visit' },
-    { id: 'camp', x: 71, y: 67, icon: 'camp', label: 'Follow the Firelight to the Camp', target: 'camp' }
+    // Lives on the 'B' (atmospheric detour) copy, tucked at the foot of the
+    // mossy stone bridge, blending with the lantern post already painted there.
+    { id: 'camp', x: 85, y: 75.3, icon: 'camp', label: 'Follow the Firelight to the Camp', target: 'camp', copyKind: 'B' }
   ];
 
   /**
@@ -91,6 +95,11 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
     return this.resolvedHeroSecrets.filter((s) => s.copyKind === kind);
   }
 
+  /** Hotspots painted/glowing on a given panorama copy — defaults to 'A' when a hotspot has no explicit copyKind. */
+  hotspotsFor(kind: CopyKind) {
+    return this.hotspots.filter((h) => (h.copyKind ?? 'A') === kind);
+  }
+
   readonly copies = COPY_PATTERN.map((kind, index) => ({ kind, index, image: COPY_IMAGE[kind] }));
 
   private readonly scrollLeft = signal(0);
@@ -106,25 +115,24 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
     return COPY_PATTERN.length * this.copyWidth();
   }
 
-  /** Only the "A" copies (real destinations) get clickable hotspots. */
+  /** Only the "A" copies (real destinations) render the alt text describing painted landmarks. */
   isRealCopy(kind: CopyKind): boolean {
     return kind === 'A';
   }
 
-  /** Hotspots currently off-screen, with the nearer of their two "A"-copy instances used for direction + position. */
+  /** Hotspots currently off-screen, with the nearer of each hotspot's own-copy-kind instances used for direction + position. */
   readonly offscreenMarkers = computed(() => {
     const w = this.copyWidth();
     const viewportW = this.viewportWidth();
     const scrolled = this.scrollLeft();
     const EDGE_MARGIN_PX = 90;
 
-    const realCopyIndices = this.copies.filter((c) => c.kind === 'A').map((c) => c.index);
-
     return this.hotspots
       .map((h) => {
+        const matchingIndices = this.copies.filter((c) => c.kind === (h.copyKind ?? 'A')).map((c) => c.index);
         let best: { screenX: number } | null = null;
 
-        for (const idx of realCopyIndices) {
+        for (const idx of matchingIndices) {
           const xPx = idx * w + w * (h.x / 100);
           const screenX = xPx - scrolled;
           if (best === null || Math.abs(screenX) < Math.abs(best.screenX)) {
