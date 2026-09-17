@@ -47,9 +47,51 @@
             <p class="game-area__best">Your best: {{ bestScore() }} 🔥</p>
             <p>{{ resultMessage }}</p>
             <button type="button" class="btn-quest" (click)="start()">Play Again</button>
+
+            @if (submitState() !== 'done') {
+              <form class="lb-submit" (ngSubmit)="submitToLeaderboard()">
+                <input
+                  class="lb-submit__input"
+                  type="text"
+                  name="playerName"
+                  maxlength="24"
+                  placeholder="Your name"
+                  [ngModel]="playerName()"
+                  (ngModelChange)="playerName.set($event)"
+                  [disabled]="submitState() === 'submitting'"
+                >
+                <button type="submit" class="btn-quest lb-submit__btn" [disabled]="!playerName().trim() || submitState() === 'submitting'">
+                  {{ submitState() === 'submitting' ? 'Saving…' : 'Submit to Leaderboard' }}
+                </button>
+              </form>
+              @if (submitState() === 'error') {
+                <p class="lb-submit__error">Couldn't save that — try again in a moment.</p>
+              }
+            } @else {
+              <p class="lb-submit__done">🏆 Added to the leaderboard!</p>
+            }
           </div>
         }
       </div>
+
+      @if (state() !== 'playing') {
+        <div class="leaderboard">
+          <p class="leaderboard__title">🏆 Top Fireflies Catchers</p>
+          @if (topScores().length === 0) {
+            <p class="leaderboard__empty">No scores yet — be the first!</p>
+          } @else {
+            <ol class="leaderboard__list">
+              @for (entry of topScores(); track $index) {
+                <li class="leaderboard__item">
+                  <span class="leaderboard__rank">{{ $index + 1 }}</span>
+                  <span class="leaderboard__name">{{ entry.name }}</span>
+                  <span class="leaderboard__score">{{ entry.score }}</span>
+                </li>
+              }
+            </ol>
+          }
+        </div>
+      }
     </div>
   </div>
 }

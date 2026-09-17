@@ -131,3 +131,119 @@ button {
   background: var(--color-amber-500);
   color: var(--color-ink-900);
 }
+
+/* ==========================================================================
+   Hidden mini-game leaderboards — shared by mini-game and dragon-run-game
+   components (both live inside a .game-panel with an amber/moss theme).
+   ========================================================================== */
+
+.leaderboard {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(240, 185, 74, 0.25);
+  text-align: left;
+}
+
+.leaderboard__title {
+  font-family: var(--font-heading);
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  color: var(--accent-strong);
+  margin: 0 0 10px;
+  text-align: center;
+}
+
+.leaderboard__empty {
+  font-size: 0.85rem;
+  color: var(--color-moss-300);
+  text-align: center;
+  margin: 0;
+}
+
+.leaderboard__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.leaderboard__item {
+  display: grid;
+  grid-template-columns: 22px 1fr auto;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 8px;
+  border-radius: 8px;
+  background: rgba(16, 25, 15, 0.5);
+  font-size: 0.88rem;
+}
+
+.leaderboard__rank {
+  font-family: var(--font-heading);
+  color: var(--color-amber-400);
+  text-align: center;
+}
+
+.leaderboard__name {
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.leaderboard__score {
+  font-family: var(--font-heading);
+  color: var(--accent-strong);
+}
+
+.lb-submit {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+  max-width: 360px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.lb-submit__input {
+  flex: 1;
+  min-width: 120px;
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  border: 2px solid rgba(240, 185, 74, 0.35);
+  background: rgba(10, 16, 10, 0.55);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  outline: none;
+}
+
+.lb-submit__input:focus {
+  border-color: var(--color-amber-500);
+}
+
+.lb-submit__btn {
+  padding: 10px 18px;
+  font-size: 0.85rem;
+}
+
+.lb-submit__btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.lb-submit__error {
+  font-size: 0.8rem;
+  color: #ff9d8a;
+  margin: 0;
+}
+
+.lb-submit__done {
+  font-family: var(--font-heading);
+  color: var(--color-amber-400);
+  margin: 0;
+}

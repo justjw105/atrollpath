@@ -1,6 +1,8 @@
 import { Component, ElementRef, OnDestroy, ViewChild, inject, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { EasterEggService } from '../../core/services/easter-egg.service';
 import { SfxService } from '../../core/services/sfx.service';
+import { LeaderboardEntry, LeaderboardService } from '../../core/services/leaderboard.service';
 
 interface Sprite {
   id: number;
@@ -9,6 +11,7 @@ interface Sprite {
 }
 
 type GameState = 'idle' | 'playing' | 'ended';
+type SubmitState = 'idle' | 'submitting' | 'done' | 'error';
 
 const DRAGON_Y = 84;
 const DRAGON_MOVE_MARGIN = 8; // keeps the dragon within [margin, 100 - margin] horizontally
@@ -30,6 +33,7 @@ const COIN_HIT_Y = 9;
 const DISTANCE_PER_SEC = 12;
 const COIN_VALUE = 5;
 const BEST_SCORE_KEY = 'atrollpath.dragonRun.bestScore';
+const PLAYER_NAME_KEY = 'atrollpath.leaderboard.playerName';
 
 /**
  * "Dragon Run" — a hidden, top-down endless dodger. You control a dragon
@@ -39,18 +43,22 @@ const BEST_SCORE_KEY = 'atrollpath.dragonRun.bestScore';
  *
  * Self-contained: owns its own requestAnimationFrame loop and spawn
  * timers, all torn down on close/destroy so nothing runs while the modal
- * isn't open. Tier-1 "leaderboard" only (personal best via localStorage) —
- * same pattern as the fireflies game.
+ * isn't open. Personal best stays local (localStorage); a real, global
+ * Top 10 leaderboard (Firestore, via LeaderboardService) is shown any time
+ * the modal is open, with a name+submit form on the "ended" screen —
+ * same pattern/shared styles as the fireflies game.
  */
 @Component({
   selector: 'app-dragon-run-game',
   standalone: true,
+  imports: [FormsModule],
   templateUrl: './dragon-run-game.component.html',
   styleUrl: './dragon-run-game.component.scss'
 })
 export class DragonRunGameComponent implements OnDestroy {
   readonly eggs = inject(EasterEggService);
   private readonly sfx = inject(SfxService);
+  private readonly leaderboard = inject(LeaderboardService);
 
   @ViewChild('area') private areaRef?: ElementRef<HTMLElement>;
 
@@ -63,12 +71,20 @@ export class DragonRunGameComponent implements OnDestroy {
   readonly bestScore = signal(this.readBestScore());
   readonly isNewBest = signal(false);
 
+  readonly topScores = signal<LeaderboardEntry[]>([]);
+  readonly playerName = signal(this.readStoredName());
+  readonly submitState = signal<SubmitState>('idle');
+
   private rafId: number | null = null;
   private lastTimestamp = 0;
   private obstacleSpawnAcc = 0;
   private coinSpawnAcc = 0;
   private nextId = 0;
   private dragging = false;
+
+  constructor() {
+    this.refreshLeaderboard();
+  }
 
   get score(): number {
     return Math.floor(this.distance()) + this.coinsCollected() * COIN_VALUE;
@@ -89,6 +105,7 @@ export class DragonRunGameComponent implements OnDestroy {
     this.distance.set(0);
     this.coinsCollected.set(0);
     this.isNewBest.set(false);
+    this.submitState.set('idle');
     this.obstacleSpawnAcc = 0;
     this.coinSpawnAcc = 0;
     this.state.set('playing');
@@ -142,6 +159,26 @@ export class DragonRunGameComponent implements OnDestroy {
       this.dragonX.update((x) => Math.min(100 - DRAGON_MOVE_MARGIN, x + STEP));
       event.preventDefault();
     }
+  }
+
+  async submitToLeaderboard(): Promise<void> {
+    const name = this.playerName().trim();
+    if (!name || this.submitState() === 'submitting') return;
+
+    this.submitState.set('submitting');
+    this.persistName(name);
+
+    const result = await this.leaderboard.submitScore('dragon-run', name, this.score);
+    if (result === 'ok') {
+      this.submitState.set('done');
+      await this.refreshLeaderboard();
+    } else {
+      this.submitState.set('error');
+    }
+  }
+
+  private async refreshLeaderboard(): Promise<void> {
+    this.topScores.set(await this.leaderboard.getTop('dragon-run'));
   }
 
   private updateDragonFromPointer(event: PointerEvent): void {
@@ -257,5 +294,15 @@ export class DragonRunGameComponent implements OnDestroy {
   private persistBestScore(score: number): void {
     if (typeof localStorage === 'undefined') return;
     localStorage.setItem(BEST_SCORE_KEY, String(score));
+  }
+
+  private readStoredName(): string {
+    if (typeof localStorage === 'undefined') return '';
+    return localStorage.getItem(PLAYER_NAME_KEY) ?? '';
+  }
+
+  private persistName(name: string): void {
+    if (typeof localStorage === 'undefined') return;
+    localStorage.setItem(PLAYER_NAME_KEY, name);
   }
 }

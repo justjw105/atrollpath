@@ -1,7 +1,6 @@
-import { Injectable } from '@angular/core';
-import { FirebaseApp, initializeApp } from 'firebase/app';
+import { Injectable, inject } from '@angular/core';
 import { Firestore, addDoc, collection, getFirestore, serverTimestamp } from 'firebase/firestore';
-import { firebaseConfig } from '../firebase-config';
+import { FirebaseAppService } from './firebase-app.service';
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -16,19 +15,18 @@ export type SubscribeResult = 'ok' | 'invalid-email' | 'error';
  * edit, or delete existing entries through the client SDK, only add a new
  * one shaped exactly like { email, source, createdAt }.
  *
- * Firebase app/Firestore are initialized lazily on first use rather than
- * at module load, so a missing/placeholder firebaseConfig doesn't break
- * anything until someone actually tries to submit the form.
+ * Firestore is fetched lazily on first use (via the shared
+ * FirebaseAppService) rather than at module load, so a missing/placeholder
+ * firebaseConfig doesn't break anything until someone actually submits.
  */
 @Injectable({ providedIn: 'root' })
 export class NewsletterService {
-  private app: FirebaseApp | null = null;
+  private readonly firebaseApp = inject(FirebaseAppService);
   private db: Firestore | null = null;
 
   private getDb(): Firestore {
     if (!this.db) {
-      this.app = initializeApp(firebaseConfig);
-      this.db = getFirestore(this.app);
+      this.db = getFirestore(this.firebaseApp.getApp());
     }
     return this.db;
   }

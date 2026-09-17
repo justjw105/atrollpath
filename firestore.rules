@@ -21,6 +21,41 @@ service cloud.firestore {
       allow read, update, delete: if false;
     }
 
+    // Hidden mini-game leaderboards — one collection per game so a simple
+    // orderBy(score desc).limit(10) query needs no composite index. Unlike
+    // the newsletter list, these ARE publicly readable (that's the whole
+    // point of a leaderboard) but still create-only: nobody can edit or
+    // remove an existing entry, including their own, so the board can't be
+    // tampered with after the fact. The score ceiling here is a basic
+    // sanity check against obviously-forged values, not real anti-cheat —
+    // genuine tamper-proofing would need a server (Cloud Function) that
+    // re-simulates/validates the run itself.
+    match /leaderboard_fireflies/{docId} {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasOnly(['name', 'score', 'createdAt'])
+                    && request.resource.data.name is string
+                    && request.resource.data.name.size() > 0
+                    && request.resource.data.name.size() <= 24
+                    && request.resource.data.score is int
+                    && request.resource.data.score >= 0
+                    && request.resource.data.score <= 500
+                    && request.resource.data.createdAt == request.time;
+      allow update, delete: if false;
+    }
+
+    match /leaderboard_dragon_run/{docId} {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasOnly(['name', 'score', 'createdAt'])
+                    && request.resource.data.name is string
+                    && request.resource.data.name.size() > 0
+                    && request.resource.data.name.size() <= 24
+                    && request.resource.data.score is int
+                    && request.resource.data.score >= 0
+                    && request.resource.data.score <= 20000
+                    && request.resource.data.createdAt == request.time;
+      allow update, delete: if false;
+    }
+
     // Everything else stays locked down by default.
     match /{document=**} {
       allow read, write: if false;
