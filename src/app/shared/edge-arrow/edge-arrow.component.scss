@@ -84,3 +84,51 @@
     box-shadow: 0 0 26px 10px rgba(240, 185, 74, 0.7), 0 3px 10px rgba(0, 0, 0, 0.55);
   }
 }
+
+/*
+ * Mobile: these "which way to pan" hints are meant to be a quiet nudge, not
+ * a second UI layer competing with the scene. At full desktop size (42px
+ * glowing circle + a text pill up to 130px wide, on each side) they read
+ * as oversized/heavy on a narrow phone viewport. Shrink the chevron, drop
+ * the label to an icon-only affordance below 480px (same pattern used for
+ * the HUD buttons), and pull both edges in slightly to reclaim width.
+ */
+@media (max-width: 640px) {
+  .edge-arrow--left {
+    left: 8px;
+  }
+
+  .edge-arrow--right {
+    right: 8px;
+  }
+
+  .edge-arrow__chevron {
+    width: 30px;
+    height: 30px;
+  }
+
+  .edge-arrow__chevron::before {
+    border-top-width: 6px;
+    border-bottom-width: 6px;
+  }
+
+  .edge-arrow--left .edge-arrow__chevron::before {
+    border-right-width: 9px;
+  }
+
+  .edge-arrow--right .edge-arrow__chevron::before {
+    border-left-width: 9px;
+  }
+
+  .edge-arrow__label {
+    font-size: 0.58rem;
+    padding: 2px 7px;
+    max-width: 92px;
+  }
+}
+
+@media (max-width: 480px) {
+  .edge-arrow__label {
+    display: none;
+  }
+}

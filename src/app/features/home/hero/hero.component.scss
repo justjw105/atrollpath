@@ -64,3 +64,56 @@
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
   max-width: 480px;
 }
+
+/*
+ * Mobile: the hero intro is `position: fixed`, so unlike every other scene
+ * (where the intro sits in normal document flow and only appears once,
+ * scrolled to) it's ALWAYS on screen, permanently covering part of the
+ * panorama and the interactive area beneath it. On a narrow viewport the
+ * title's `clamp()` floor (2.2rem) doesn't shrink below that no matter how
+ * little width is actually available, so it wraps to 2 large lines plus a
+ * full subtitle and eyebrow — eating a big chunk of an already-short phone
+ * viewport and reading as intrusive. Shrink everything with a real mobile
+ * floor and tighten the padding so it stays legible but much smaller.
+ */
+@media (max-width: 640px) {
+  .scene__intro {
+    padding: 0 16px 20px;
+    max-width: 100%;
+  }
+
+  .scene__intro .eyebrow {
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+  }
+
+  .scene__title {
+    font-size: clamp(1.15rem, 6vw, 1.7rem);
+    margin: 8px 0 8px;
+  }
+
+  /* The desktop <br> forces "Whimsical etched glass," / "forged by
+     firelight." onto exactly 2 lines, which looks intentional at desktop
+     widths. At mobile sizes that first half is often still too long for
+     the viewport and wraps again on its own, stranding "glass," alone on
+     a line. Dropping the forced break here lets the browser choose its
+     own, better-balanced wrap points across the full sentence. */
+  .scene__title-break {
+    display: none;
+  }
+
+  .scene__subtitle {
+    font-size: 0.85rem;
+    max-width: 340px;
+  }
+}
+
+@media (max-width: 400px) {
+  .scene__title {
+    font-size: clamp(1rem, 6.4vw, 1.4rem);
+  }
+
+  .scene__subtitle {
+    font-size: 0.78rem;
+  }
+}

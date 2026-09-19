@@ -4,9 +4,10 @@
   [class.edge-arrow--left]="side === 'left'"
   [class.edge-arrow--right]="side === 'right'"
   [style.top.%]="y"
+  [attr.aria-label]="label"
   (mouseenter)="onHoverEnter()"
   (click)="onActivate()"
 >
   <span class="edge-arrow__chevron"></span>
-  <span class="edge-arrow__label">{{ label }}</span>
+  <span class="edge-arrow__label" aria-hidden="true">{{ label }}</span>
 </button>

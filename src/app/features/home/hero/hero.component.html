@@ -31,9 +31,9 @@
     <app-edge-arrow [side]="marker.side" [y]="marker.y" [label]="marker.label" (activate)="go(marker.target)" />
   }
 
-  <div class="scene__intro">
+  <div class="scene__intro" #introEl>
     <p class="eyebrow">A quest begins at the Troll Cave</p>
-    <h1 class="scene__title">Whimsical etched glass,<br>forged by firelight.</h1>
+    <h1 class="scene__title">Whimsical etched glass, <br class="scene__title-break">forged by firelight.</h1>
     <p class="scene__subtitle">Click a landmark to explore, or keep panning in either direction — the path loops all the way around.</p>
   </div>
 </section>

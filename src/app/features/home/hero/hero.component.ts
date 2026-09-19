@@ -60,6 +60,7 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
   readonly scene = inject(SceneService);
 
   @ViewChild('stage') private stageRef!: ElementRef<HTMLElement>;
+  @ViewChild('introEl') private introRef?: ElementRef<HTMLElement>;
 
   /**
    * GROWTH POINT: single source of truth for landmarks painted into
@@ -103,6 +104,17 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
   readonly copies = COPY_PATTERN.map((kind, index) => ({ kind, index, image: COPY_IMAGE[kind] }));
 
   private readonly scrollLeft = signal(0);
+  /**
+   * Real, measured top edge (in viewport px) of the fixed title/subtitle
+   * block, kept in sync via ResizeObserver. Defaults far below any real
+   * viewport so nothing is clamped before the first measurement lands.
+   * Off-screen edge-hint arrows use this (not a guessed percentage) to
+   * stay clear of the text regardless of how many lines it wraps to at
+   * a given viewport size/font-load state — a hardcoded percentage can't
+   * account for that, but a real measurement always can.
+   */
+  private readonly introTopPx = signal(99999);
+  private introResizeObserver?: ResizeObserver;
   private readonly copyWidth = signal(typeof window !== 'undefined' ? window.innerHeight * IMAGE_ASPECT : 2400);
   private readonly viewportWidth = signal(typeof window !== 'undefined' ? window.innerWidth : 1200);
 
@@ -127,6 +139,17 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
     const scrolled = this.scrollLeft();
     const EDGE_MARGIN_PX = 90;
 
+    // The HUD sits ~70px tall at top; the title/subtitle block's real,
+    // measured top edge (introTopPx) marks the danger zone at bottom —
+    // both are fixed overlays independent of scroll/pan, so an edge hint
+    // using a hotspot's raw y (e.g. the Camp firelight, low at y:75) could
+    // otherwise land on top of either one.
+    const viewportH = typeof window !== 'undefined' ? window.innerHeight : 900;
+    const HUD_CLEARANCE_PX = 70;
+    const TEXT_SAFETY_MARGIN_PX = 40;
+    const minYPercent = (HUD_CLEARANCE_PX / viewportH) * 100;
+    const maxYPercent = Math.max(minYPercent + 10, ((this.introTopPx() - TEXT_SAFETY_MARGIN_PX) / viewportH) * 100);
+
     return this.hotspots
       .map((h) => {
         const matchingIndices = this.copies.filter((c) => c.kind === (h.copyKind ?? 'A')).map((c) => c.index);
@@ -142,11 +165,13 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
 
         if (!best) return null;
 
+        const safeY = Math.min(Math.max(h.y, minYPercent), maxYPercent);
+
         if (best.screenX < EDGE_MARGIN_PX) {
-          return { ...h, side: 'left' as const };
+          return { ...h, y: safeY, side: 'left' as const };
         }
         if (best.screenX > viewportW - EDGE_MARGIN_PX) {
-          return { ...h, side: 'right' as const };
+          return { ...h, y: safeY, side: 'right' as const };
         }
         return null;
       })
@@ -171,10 +196,23 @@ export class HeroComponent implements AfterViewInit, OnDestroy {
     this.scrollLeft.set(el.scrollLeft);
 
     window.addEventListener('resize', this.onWindowResize);
+
+    if (this.introRef && typeof ResizeObserver !== 'undefined') {
+      this.introResizeObserver = new ResizeObserver(() => this.measureIntro());
+      this.introResizeObserver.observe(this.introRef.nativeElement);
+    }
+    this.measureIntro();
   }
 
   ngOnDestroy(): void {
     window.removeEventListener('resize', this.onWindowResize);
+    this.introResizeObserver?.disconnect();
+  }
+
+  private measureIntro(): void {
+    const el = this.introRef?.nativeElement;
+    if (!el) return;
+    this.introTopPx.set(el.getBoundingClientRect().top);
   }
 
   private onWindowResize = (): void => {
